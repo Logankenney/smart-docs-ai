@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Smart Docs Ai is AI document control for companies of every size. Every document controlled, every change on record, every lesson kept.">
+<title>Smart Docs Ai</title>
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#f7f5ef">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Smart Docs Ai (2026-11-25). Paper ground, ink text, approval green and record blue; the family rule of no cards, frames or filled panels. */
+  :root {
+    --bg: #f7f5ef; --bg-2: #efece3; --fg: #17202a; --fg-2: #4f5a66; --rule: rgba(23,32,42,.14);
+    --accent: #1f8a5b; --accent-2: #2b5ea8; --accent-soft: #dcefe4; --amber: #c9811a; --ink: #17202a;
+    --r: 14px; color-scheme: light;
+    --display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    --body: "Inter", "Segoe UI", Helvetica, Arial, sans-serif;
+    --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: 4rem; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 18px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  .wrap { max-width: 78ch; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+
+  /* Header: the family header. Thin translucent bar, small mark at left, evenly spaced small text links. Static on every screen size. */
+  .site-header { position: sticky; top: 0; z-index: 10; background: rgba(247,245,239,.84); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); padding-top: env(safe-area-inset-top, 0px); }
+  .site-header .wrap { max-width: 1024px; height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 0; }
+  .brand { display: flex; align-items: center; text-decoration: none; opacity: .9; }
+  .brand:hover { opacity: 1; }
+  .mark { width: 22px; height: 22px; flex: none; }
+  .brand-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  nav.primary { display: flex; flex: 1; justify-content: space-evenly; align-items: center; margin: 0 1.5rem; }
+  nav.primary a { font-size: 12px; font-weight: 400; letter-spacing: -.01em; text-decoration: none; color: var(--fg); opacity: .8; padding: 0 .25rem; line-height: 48px; transition: opacity .2s ease; }
+  nav.primary a:hover, nav.primary a[aria-current="true"] { opacity: 1; }
+  .hdr-spacer { display: inline-block; width: 28px; height: 28px; }
+  @media (max-width: 760px) {
+    .site-header .wrap { height: auto; flex-wrap: wrap; padding-top: 2px; }
+    .brand, .hdr-spacer { height: 40px; }
+    .hdr-spacer { order: 2; }
+    nav.primary { order: 3; flex: 1 0 100%; margin: 0; justify-content: space-between; gap: .25rem; height: 32px; }
+    nav.primary a { font-size: 11px; line-height: 32px; padding: 0; letter-spacing: 0; white-space: nowrap; }
+    html { scroll-padding-top: 6rem; }
+  }
+
+  main { display: flex; flex-direction: column; padding-block: 3.5rem 4.5rem; }
+  section > .wrap { display: flex; flex-direction: column; gap: 1.5rem; }
+  h1 { font-family: var(--display); font-weight: 600; font-variation-settings: "opsz" 144; font-size: clamp(3rem, 9vw, 5.2rem); line-height: 1; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+  h2 { font-family: var(--display); font-weight: 600; font-size: clamp(1.75rem, 4vw, 2.4rem); line-height: 1.15; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+  h3 { font-family: var(--display); font-weight: 600; font-size: 1.2rem; line-height: 1.3; margin: 0; }
+  p { margin: 0; }
+  .lede { font-size: 1.2rem; color: var(--fg-2); max-width: 60ch; }
+  .lede strong { color: var(--fg); font-weight: 500; display: block; margin-bottom: .5rem; font-size: 1.25rem; line-height: 1.35; }
+  .muted { color: var(--fg-2); font-size: 1.1rem; }
+
+  /* Logo stage: the whole first screen is the animated mark, then the headline, tagline and one link. */
+  .logo-stage { min-height: calc(100svh - 82px - env(safe-area-inset-top, 0px)); place-items: center; position: relative; margin-top: -3.5rem; }
+  .home-intro { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1.75rem; padding: 1rem 0 2.5rem; }
+  .home-logo { position: relative; display: grid; place-items: center; }
+  .home-text { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .home-text h1 { font-size: clamp(2.6rem, 8vw, 4.4rem); }
+  .home-text .tagline { font-size: 1.25rem; font-weight: 500; color: var(--fg); line-height: 1.35; margin: 0; }
+  .home-text .actions { margin-top: .25rem; }
+  /* Logo: three sheets drawn in ink, offset like revisions; the approval stamp presses onto the front sheet; a log line writes itself beneath. Canvas-drawn; a finished frame under reduced motion. */
+  .logo { width: min(62vw, 300px); height: auto; aspect-ratio: 1; display: block; position: relative; z-index: 1; border-radius: 50%; background: var(--ink); will-change: transform; }
+  .home-logo::before { content: ""; position: absolute; left: 50%; top: 50%; width: min(96vw, 560px); aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; will-change: transform, opacity;
+    background: radial-gradient(circle, rgba(31,138,91,.26) 0%, rgba(31,138,91,.12) 30%, rgba(43,94,168,.06) 48%, transparent 68%); animation: glowin 2s ease 2.4s both; }
+  @keyframes glowin { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .logo { animation: float 8s ease-in-out 1s infinite; }
+    .home-logo::before { animation: glowin 2s ease 2.4s both, pulse 8s ease-in-out 4s infinite; }
+    .home-text { animation: fadein .8s ease 3.2s both; }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 50% { opacity: .8; transform: translate(-50%, -50%) scale(1.06); } }
+  }
+  @media (prefers-reduced-motion: reduce) { .home-logo::before, .home-text { animation: none; } }
+
+  /* Pages: one view at a time, chosen by the URL hash */
+  .page { display: none; }
+  .page.active { display: block; animation: pagein .35s ease; }
+  .page.logo-stage.active { display: grid; }
+  @keyframes pagein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .page.active { animation: none; } }
+  main { min-height: calc(100svh - 48px - 12rem); }
+  .page:not(.logo-stage) > .wrap { align-items: center; text-align: center; }
+  .page:not(.logo-stage) .lede, .page:not(.logo-stage) .intro, .page:not(.logo-stage) .note { margin-left: auto; margin-right: auto; }
+  .page:not(.logo-stage) .actions { justify-content: center; }
+  .panel, .steps, .grid, .faq-list, .status { width: 100%; text-align: left; }
+  .grid { text-align: center; }
+  .status { align-items: center; text-align: center; }
+  .contact { justify-content: center; }
+  .steps li div { text-align: left; }
+  .hero { padding-block: clamp(1.5rem, 6vw, 4rem) 0; }
+  .hero .wrap { gap: 1.75rem; }
+  .hero h1 { font-size: clamp(3.4rem, 11vw, 6.5rem); }
+  .hero .lede { font-size: 1.2rem; max-width: 52ch; }
+  .hero .lede strong { font-size: 1.35rem; }
+  .hero h2 { margin-top: 2.5rem; }
+  .actions { display: flex; gap: .75rem; flex-wrap: wrap; }
+  /* Floating buttons and tabs: bare text; a soft green haze when hovered, focused or active. */
+  .btn, .tabs button { position: relative; isolation: isolate; font: 500 1rem var(--body); text-decoration: none; padding: .7rem 1.25rem; border-radius: 999px; border: 0; background: transparent; color: var(--fg); cursor: pointer; transition: transform .18s ease, text-shadow .18s ease, color .18s ease, opacity .18s ease; opacity: .85; }
+  .btn::before { content: ""; position: absolute; inset: -40% -22%; z-index: -1; border-radius: 999px; background: radial-gradient(ellipse at center, rgba(31,138,91,.4) 0%, rgba(31,138,91,.16) 45%, transparent 72%); filter: blur(10px); opacity: 0; transform: scale(.85); transition: opacity .22s ease, transform .22s ease; pointer-events: none; }
+  .btn:hover::before, .btn:focus-visible::before { opacity: 1; transform: scale(1); }
+  .btn:hover, .btn:focus-visible { transform: translateY(-1px); color: var(--fg); opacity: 1; text-shadow: 0 0 10px rgba(31,138,91,.45), 0 0 24px rgba(31,138,91,.25); }
+  .btn.primary { color: var(--accent); opacity: 1; font-weight: 700; }
+  .btn.primary:hover, .btn.primary:focus-visible { color: var(--accent); }
+  .btn:active, .tabs button:active { transform: translateY(0); }
+  :focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+  .btn:focus-visible, .tabs button:focus-visible { outline: none; }
+  .tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; align-self: center; max-width: 100%; }
+  .tabs button { font-size: 1rem; color: var(--fg); opacity: .6; padding: .6rem 1.1rem; white-space: nowrap; transition: opacity .2s ease; }
+  .tabs button:hover, .tabs button:focus-visible, .tabs button[aria-selected="true"] { opacity: 1; }
+  .panel { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  .panel[hidden] { display: none; }
+  .panel .col { padding: .5rem .25rem; max-width: 40rem; margin: 0 auto; text-align: center; }
+  .panel .col h4 { font-family: var(--body); font-size: .8rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin: 0 0 .75rem; }
+  .panel .col p { color: var(--fg-2); font-size: 1.05rem; line-height: 1.7; }
+  /* Steps */
+  .steps { list-style: none; margin: 0 auto; padding: 0; counter-reset: step; display: grid; gap: .25rem; max-width: 40rem; }
+  .steps li { display: grid; grid-template-columns: 2.6rem 1fr; gap: 1.1rem; align-items: start; padding: 1rem 0; counter-increment: step; }
+  .steps li::before { content: counter(step); display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font: 600 .95rem var(--body); }
+  .steps li p { color: var(--fg-2); margin-top: .3rem; font-size: 1.05rem; }
+  /* Principles grid */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1.25rem 2rem; }
+  .card { padding: .75rem .25rem; display: flex; flex-direction: column; gap: .4rem; }
+  .card h3 { color: var(--accent); font-family: var(--body); font-weight: 600; font-size: 1.05rem; }
+  .card p { color: var(--fg-2); font-size: 1.05rem; }
+  /* The record: a sample revision log on the What it does page, open table, hairline rows */
+  .log { width: 100%; overflow-x: auto; }
+  .log table { width: 100%; border-collapse: collapse; font-size: .95rem; text-align: left; }
+  .log th, .log td { padding: .7rem .8rem .7rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .log th { font-family: var(--body); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-2); font-weight: 600; }
+  .log code { font-family: var(--mono); font-size: .9rem; }
+  .log .ok { color: var(--accent); font-weight: 600; }
+  .log .wait { color: var(--amber); font-weight: 600; }
+  .log a { color: var(--accent-2); }
+  /* FAQ */
+  .faq-list { display: grid; gap: 0; max-width: 44rem; margin: 0 auto; }
+  details { border-bottom: 1px solid var(--rule); padding: 0; }
+  details:first-of-type { border-top: 1px solid var(--rule); }
+  summary { cursor: pointer; padding: 1.1rem 0; font-weight: 500; font-size: 1.1rem; list-style: none; display: flex; justify-content: space-between; gap: 1rem; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--accent); font-weight: 500; font-size: 1.2rem; line-height: 1; }
+  details[open] summary::after { content: "−"; }
+  details p { color: var(--fg-2); padding-bottom: 1.2rem; font-size: 1.05rem; }
+  /* Contact */
+  .status { padding: clamp(1rem, 4vw, 2rem) 0; display: flex; flex-direction: column; gap: 1.1rem; }
+  .contact { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+  .contact code { font-family: var(--mono); font-size: 1.05rem; color: var(--fg); background: none; border: 0; padding: .7rem .5rem; user-select: all; }
+  .note { font-size: 1rem; color: var(--fg-2); }
+  footer { padding-block: 1.75rem 3rem; font-size: .9rem; color: var(--fg-2); }
+  footer .wrap { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  footer nav { display: flex; gap: 1.1rem; flex-wrap: wrap; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--fg); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="#home" aria-label="Smart Docs Ai home">
+      <svg class="mark" viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="100" fill="#17202a"/>
+        <g fill="none" stroke="#f7f5ef" stroke-width="9" stroke-linejoin="round">
+          <path d="M76 44 h56 l18 18 v74 h-74 z" stroke-opacity=".45"/>
+          <path d="M64 56 h56 l18 18 v74 h-74 z" stroke-opacity=".7"/>
+          <path d="M52 68 h56 l18 18 v74 h-74 z"/>
+        </g>
+        <circle cx="104" cy="126" r="17" fill="none" stroke="#1f8a5b" stroke-width="9"/>
+        <circle cx="104" cy="126" r="5" fill="#1f8a5b"/>
+      </svg>
+      <span class="brand-name">Smart Docs Ai</span>
+    </a>
+    <nav class="primary" id="primary-nav" aria-label="Sections">
+      <a href="#services">What it does</a>
+      <a href="#process">How it works</a>
+      <a href="#about">About</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Early access</a>
+    </nav>
+    <span class="hdr-spacer" aria-hidden="true"></span>
+  </div>
+</header>
+
+<main>
+
+  <section id="home" class="page logo-stage" aria-label="Smart Docs Ai">
+    <!-- Logo (2026-11-25): three sheets drawn in ink, offset like revisions, then the approval stamp presses onto the front sheet and a log line writes itself beneath. Every 12 s the back sheet slides forward as a new revision. Drawn on canvas by the script below. -->
+    <div class="home-intro">
+    <div class="home-logo">
+    <canvas class="logo" id="docs-logo" width="600" height="600" role="img" aria-label="Smart Docs Ai: three stacked document sheets with an approval stamp"></canvas>
+    </div>
+    <div class="home-text">
+      <h1>Every document. On record.</h1>
+      <p class="tagline">AI document control for companies of every size.</p>
+      <div class="actions"><a class="btn primary" href="#services">See what it does</a></div>
+    </div>
+    </div>
+  </section>
+
+  <section id="services" class="page" aria-labelledby="services-h">
+    <div class="wrap">
+      <h2 id="services-h">Control the document. Keep the record. Learn from it.</h2>
+      <div class="tabs" role="tablist" aria-label="What it does">
+        <button role="tab" id="tab-control" aria-selected="true" aria-controls="panel-control">Control</button>
+        <button role="tab" id="tab-record" aria-selected="false" aria-controls="panel-record" tabindex="-1">Record</button>
+        <button role="tab" id="tab-learn" aria-selected="false" aria-controls="panel-learn" tabindex="-1">Learn</button>
+      </div>
+
+      <div class="panel" role="tabpanel" id="panel-control" aria-labelledby="tab-control">
+        <div class="col"><h4>What it does</h4><p>Every document gets a number, an owner and a revision. A change is a new revision, approved by a named person, and the old one stays exactly as it was. Nothing is overwritten and nothing goes missing.</p></div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="panel-record" aria-labelledby="tab-record" hidden>
+        <div class="col"><h4>What it does</h4><p>Every revision writes a line in the log and a PDF that shows what changed and who changed it. When someone asks what was in force on a given day, you open it. The log is a spreadsheet, because that is what everyone already reads.</p></div>
+        <div class="log" aria-label="Example revision log">
+          <table>
+            <thead><tr><th>Document</th><th>Rev</th><th>When</th><th>Who</th><th>Change</th><th>Edits</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><code>SD-DOC-0007</code> Supplier approval procedure</td><td><code>2</code></td><td>2026-11-25</td><td>M. Alvarez</td><td>Added the annual re-check in step 4</td><td><a href="#services" aria-label="Edit PDF for revision 2">PDF</a></td><td class="ok">Approved</td></tr>
+              <tr><td><code>SD-DOC-0007</code> Supplier approval procedure</td><td><code>1</code></td><td>2026-09-02</td><td>M. Alvarez</td><td>Scope widened to contractors</td><td><a href="#services" aria-label="Edit PDF for revision 1">PDF</a></td><td class="ok">Approved</td></tr>
+              <tr><td><code>SD-DOC-0012</code> Data retention policy</td><td><code>3</code></td><td>2026-11-24</td><td>J. Okafor</td><td>Backup rotation set to 35 days</td><td><a href="#services" aria-label="Edit PDF for revision 3">PDF</a></td><td class="wait">Awaiting approval</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="panel-learn" aria-labelledby="tab-learn" hidden>
+        <div class="col"><h4>What it does</h4><p>Every lesson is kept with the document it changed, so the next revision starts smarter. The AI reads your history, drafts the change summary, writes the redline and chases the approval. It never approves anything. You do.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="process" class="page" aria-labelledby="process-h">
+    <div class="wrap">
+      <h2 id="process-h">Five steps, every time.</h2>
+      <ol class="steps">
+        <li><div><h3>Add a document</h3><p>Write it here or bring the file you have. It gets a number, an owner and Rev 0.</p></div></li>
+        <li><div><h3>Make a change</h3><p>Edit together in the browser. The AI drafts the summary of what changed.</p></div></li>
+        <li><div><h3>Get it approved</h3><p>A named person approves the revision. That approval is a real electronic signature.</p></div></li>
+        <li><div><h3>See the record</h3><p>A line in the log and a PDF of every edit, with the author on every page.</p></div></li>
+        <li><div><h3>Keep the lesson</h3><p>What you learned stays attached to the document, ready for the next revision.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="about" class="page hero" aria-labelledby="about-h">
+    <div class="wrap">
+      <h1 id="about-h">Proof, kept.</h1>
+      <p class="lede"><strong>Your documents, on record.</strong> Smart Docs Ai is built for one job: keeping an honest record of what your documents say, who approved them and what changed. For teams of one and teams of hundreds.</p>
+      <div class="actions">
+        <a class="btn primary" href="#contact">Get early access</a>
+        <a class="btn" href="#services">See what it does</a>
+      </div>
+      <h2>Why the name.</h2>
+      <p class="lede">Smart is the part that does the clerical work: the summaries, the redlines, the reminders. Docs is the record, numbered and approved and kept. Ai is the family it belongs to. Your files stay yours, live where you choose, and never train anything for anyone else.</p>
+      <div class="grid">
+        <div class="card"><h3>Controlled</h3><p>Every document has a revision and an owner.</p></div>
+        <div class="card"><h3>On record</h3><p>Every change has a log line and a PDF.</p></div>
+        <div class="card"><h3>Explainable</h3><p>Every AI suggestion is labelled and reasoned.</p></div>
+        <div class="card"><h3>Private</h3><p>Your documents never train anything.</p></div>
+        <div class="card"><h3>Yours</h3><p>Your files, your storage, your approval.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="page" aria-labelledby="faq-h">
+    <div class="wrap">
+      <h2 id="faq-h">What we get asked first.</h2>
+      <div class="faq-list">
+        <details><summary>What is Smart Docs Ai?</summary><p>Document control with AI inside. Controlled documents, numbered revisions, approvals, an audit trail, a revision log and a PDF of every edit, with lessons learned kept beside the documents they changed.</p></details>
+        <details><summary>Is it a document management system?</summary><p>No. Storage tools keep files. Smart Docs Ai keeps the record: which revision is in force, who approved it, what changed and why. You can keep using your storage underneath it.</p></details>
+        <details><summary>Does the AI change my documents?</summary><p>It drafts, summarises and suggests, and every suggestion is labelled. A named person approves every revision. The AI never writes to a released revision.</p></details>
+        <details><summary>Where are my files kept?</summary><p>Where you choose. Hosted by us, or on your own storage with the installable version. Either way they are yours, you can export everything at any time, and nothing you store trains a model for anyone else.</p></details>
+        <details><summary>Does it meet ISO 9001?</summary><p>It is built around clause 7.5, documented information: creation, approval, revision, distribution and retention, with the records an auditor asks for. We will say plainly which standards it meets and which it does not yet.</p></details>
+        <details><summary>When can I use it?</summary><p>Early access is opening soon. Leave your email and the kind of documents you need to control, and you are on the list.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="page" aria-labelledby="contact-h">
+    <div class="wrap">
+      <div class="status">
+        <h2 id="contact-h">Need document control? Get early access.</h2>
+        <p class="muted">Tell us what you need to keep on record, in a sentence. We reply within two business days, and you are first in line.</p>
+        <div class="contact">
+          <code id="email">hello@smartdocs.io</code>
+          <button class="btn primary" type="button" id="copy-btn">Copy address</button>
+          <a class="btn" href="mailto:hello@smartdocs.io?subject=Smart%20Docs%20Ai%20early%20access">Open in mail</a>
+          <span class="note" id="copy-note" aria-live="polite"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Smart Docs Ai LLC</span>
+    <nav aria-label="Footer">
+      <a href="#services">What it does</a>
+      <a href="#about">About</a>
+      <a href="#contact">Early access</a>
+      <a href="mailto:hello@smartdocs.io">hello@smartdocs.io</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    // Tabs
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+    function select(tab) {
+      tabs.forEach(function (t) {
+        var on = t === tab;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+      });
+      tab.focus();
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(t); });
+      t.addEventListener('keydown', function (e) {
+        var n = i;
+        if (e.key === 'ArrowRight') n = i + 1; else if (e.key === 'ArrowLeft') n = i - 1; else return;
+        var next = tabs[(n + tabs.length) % tabs.length];
+        e.preventDefault(); select(next);
+      });
+    });
+
+    // Pages: show the one named in the hash; the logo is the home page
+    var pages = Array.prototype.slice.call(document.querySelectorAll('.page'));
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav.primary a'));
+    function show() {
+      var id = (location.hash || '#home').slice(1);
+      if (!document.getElementById(id)) id = 'home';
+      pages.forEach(function (p) { p.classList.toggle('active', p.id === id); });
+      links.forEach(function (a) { a.setAttribute('aria-current', a.getAttribute('href') === '#' + id ? 'true' : 'false'); });
+      document.title = id === 'home' ? 'Smart Docs Ai' : 'Smart Docs Ai · ' + ({services: 'What it does', process: 'How it works', about: 'About', faq: 'FAQ', contact: 'Early access'}[id] || '');
+      requestAnimationFrame(function () { window.scrollTo(0, 0); });
+    }
+    window.addEventListener('hashchange', show);
+    show();
+
+    // Logo: three sheets drawn in ink, the approval stamp pressed on the front sheet, a log line written beneath.
+    (function () {
+      var cv = document.getElementById('docs-logo'); if (!cv || !cv.getContext) return;
+      var ctx = cv.getContext('2d'); var W = 600, H = 600;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var paper = '#f7f5ef', green = '#1f8a5b', blue = '#5f8fd6';
+      // Sheet geometry: three sheets offset down-left, like revisions laid on a desk. Each is a path with a folded corner.
+      function sheet(ox, oy) { var x = 225 + ox, y = 150 + oy, w = 190, h = 240, c = 44;
+        return [{x:x,y:y},{x:x+w-c,y:y},{x:x+w,y:y+c},{x:x+w,y:y+h},{x:x,y:y+h},{x:x,y:y}]; }
+      var sheets = [sheet(40,-40), sheet(20,-20), sheet(0,0)];
+      var alphas = [.42, .68, 1];
+      function drawPath(pts, reveal, alpha, width) {
+        var total = 0, lens = []; for (var i = 1; i < pts.length; i++) { var l = Math.hypot(pts[i].x-pts[i-1].x, pts[i].y-pts[i-1].y); lens.push(l); total += l; }
+        var budget = total * reveal; ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+        for (var j = 1; j < pts.length; j++) { var l2 = lens[j-1]; if (budget <= 0) break;
+          var f = Math.min(1, budget / l2); ctx.lineTo(pts[j-1].x + (pts[j].x-pts[j-1].x)*f, pts[j-1].y + (pts[j].y-pts[j-1].y)*f); budget -= l2; }
+        ctx.strokeStyle = 'rgba(247,245,239,' + alpha + ')'; ctx.lineWidth = width; ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.stroke();
+      }
+      function fold(pts, reveal, alpha) { var p = pts[1], q = pts[2]; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + (p.x - p.x) , p.y + (q.y - p.y) * reveal); ctx.lineTo(p.x + (q.x - p.x) * reveal, q.y); ctx.strokeStyle = 'rgba(247,245,239,' + alpha + ')'; ctx.lineWidth = 8; ctx.stroke(); }
+      function textLines(ox, oy, reveal, alpha) { // faint ruled lines on the front sheet, drawn like writing
+        var x = 225 + ox + 28, y = 150 + oy + 70; for (var i = 0; i < 5; i++) { var r = Math.max(0, Math.min(1, reveal * 5 - i)); if (r <= 0) break;
+          var len = (i === 4 ? 70 : 130) * r; ctx.beginPath(); ctx.moveTo(x, y + i * 26); ctx.lineTo(x + len, y + i * 26); ctx.strokeStyle = 'rgba(247,245,239,' + (alpha * .5) + ')'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.stroke(); }
+      }
+      function stamp(cx, cy, press, settle) { // ring plus dot, scales in as it presses; a little ink bleed at full press
+        var s = 1.5 - .5 * press; ctx.save(); ctx.translate(cx, cy); ctx.scale(s, s); ctx.globalAlpha = press;
+        ctx.beginPath(); ctx.arc(0, 0, 34, 0, 6.283); ctx.strokeStyle = green; ctx.lineWidth = 11; ctx.stroke();
+        ctx.beginPath(); ctx.arc(0, 0, 10, 0, 6.283); ctx.fillStyle = green; ctx.fill();
+        if (settle > 0) { ctx.globalAlpha = press * .35 * settle; ctx.beginPath(); ctx.arc(0, 0, 40 + 6 * settle, 0, 6.283); ctx.strokeStyle = green; ctx.lineWidth = 3; ctx.stroke(); }
+        ctx.restore();
+      }
+      function logLine(reveal) { // the entry written under the stack: a short blue line, then a green tick-dot at its end
+        var x = 195, y = 448, len = 210 * reveal; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + len, y); ctx.strokeStyle = blue; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.stroke();
+        if (reveal >= 1) { ctx.beginPath(); ctx.arc(x + len + 16, y, 6, 0, 6.283); ctx.fillStyle = green; ctx.fill(); }
+      }
+      var ease = function (t0, dur, t) { var v = Math.max(0, Math.min(1, (t - t0) / dur)); return v * v * (3 - 2 * v); };
+      function draw(t) {
+        ctx.clearRect(0, 0, W, H);
+        // Loop phase: every 12 s after the intro the back sheet slides forward as the next revision.
+        var loopT = t > 7 ? ((t - 7) % 12) : -1; var slide = loopT >= 0 && loopT < 1.2 ? ease(0, 1.2, loopT) : 0;
+        for (var i = 0; i < 3; i++) {
+          var reveal = ease(0.3 + i * 0.8, 0.9, t); if (reveal <= 0) continue;
+          var ox = 0, oy = 0; if (slide > 0) { // the whole stack settles back by one step while the back sheet comes to the front
+            if (i === 0) { ox = -40 * slide; oy = 40 * slide; } else { ox = 20 * slide; oy = -20 * slide; } }
+          ctx.save(); ctx.translate(ox, oy); drawPath(sheets[i], reveal, alphas[i], 9); ctx.restore();
+        }
+        var front = ease(1.9, 0.9, t); if (front > 0) textLines(0, 0, ease(2.5, 0.8, t), 1);
+        var press = ease(3.0, 0.45, t); var settle = press >= 1 ? Math.max(0, 1 - (t - 3.45) / 0.6) : 0;
+        if (press > 0 && !(slide > 0 && slide < 1)) stamp(329, 326, press, settle);
+        if (slide > 0 && slide < 1) stamp(329, 326, slide, 0);
+        var line = ease(3.6, 0.9, t); if (line > 0) logLine(line);
+      }
+      if (reduce) { draw(6); return; }
+      var start = null;
+      function frame(now) { if (document.hidden) { start = null; return; } if (start === null) start = now - 0; draw((now - start) / 1000); requestAnimationFrame(frame); }
+      requestAnimationFrame(frame);
+      document.addEventListener('visibilitychange', function () { if (!document.hidden) { start = null; requestAnimationFrame(function (n) { start = n - 7000; frame(n); }); } });
+    })();
+
+    // Copy the address
+    var btn = document.getElementById('copy-btn');
+    var note = document.getElementById('copy-note');
+    var text = document.getElementById('email').textContent;
+    btn.addEventListener('click', function () {
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(document.getElementById('email'));
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        note.textContent = 'Selected. Press Ctrl+C or Cmd+C to copy.';
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () {
+          note.textContent = 'Copied.';
+          setTimeout(function () { note.textContent = ''; }, 2500);
+        }, fallback);
+      } else { fallback(); }
+    });
+  })();
+</script>
+</body>
+</html>
