@@ -156,8 +156,7 @@
   /* Contact */
   .status { padding: clamp(1rem, 4vw, 2rem) 0; display: flex; flex-direction: column; gap: 1.1rem; }
   .contact { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
-  .contact code { font-family: var(--mono); font-size: 1.05rem; color: var(--fg); background: none; border: 0; padding: .7rem .5rem; user-select: all; }
-  .note { font-size: 1rem; color: var(--fg-2); }
+  .contact .email { font-family: var(--mono); font-size: 1.05rem; color: var(--fg); opacity: 1; }
   footer { padding-block: 1.75rem 3rem; font-size: .9rem; color: var(--fg-2); }
   footer .wrap { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
   footer nav { display: flex; gap: 1.1rem; flex-wrap: wrap; }
@@ -306,10 +305,7 @@
         <h2 id="contact-h">Need document control? Get early access.</h2>
         <p class="muted">Tell us what you need to keep on record, in a sentence. We reply within two business days, and you are first in line.</p>
         <div class="contact">
-          <code id="email">hello@smartdocs.io</code>
-          <button class="btn primary" type="button" id="copy-btn">Copy address</button>
-          <a class="btn" href="mailto:hello@smartdocs.io?subject=Smart%20Docs%20Ai%20early%20access">Open in mail</a>
-          <span class="note" id="copy-note" aria-live="polite"></span>
+          <a class="btn email" href="mailto:hello@smartdocs.io?subject=Smart%20Docs%20Ai%20enquiry">hello@smartdocs.io</a>
         </div>
       </div>
     </div>
@@ -324,7 +320,7 @@
       <a href="#services">What it does</a>
       <a href="#about">About</a>
       <a href="#contact">Early access</a>
-      <a href="mailto:hello@smartdocs.io">hello@smartdocs.io</a>
+      <a href="mailto:hello@smartdocs.io?subject=Smart%20Docs%20Ai%20enquiry">hello@smartdocs.io</a>
     </nav>
   </div>
 </footer>
@@ -568,23 +564,6 @@
       document.addEventListener('visibilitychange', function () { if (!document.hidden && !paused) { start = null; resume = 0; first = true; requestAnimationFrame(frame); } });
     })();
 
-    // Copy the address
-    var btn = document.getElementById('copy-btn');
-    var note = document.getElementById('copy-note');
-    var text = document.getElementById('email').textContent;
-    btn.addEventListener('click', function () {
-      function fallback() {
-        var r = document.createRange(); r.selectNodeContents(document.getElementById('email'));
-        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-        note.textContent = 'Selected. Press Ctrl+C or Cmd+C to copy.';
-      }
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function () {
-          note.textContent = 'Copied.';
-          setTimeout(function () { note.textContent = ''; }, 2500);
-        }, fallback);
-      } else { fallback(); }
-    });
   })();
 </script>
 </body>
