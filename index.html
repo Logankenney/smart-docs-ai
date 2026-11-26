@@ -69,13 +69,13 @@
   /* Home animation: wireframe folders, long drawer, cabinet to AI server. Canvas-drawn; a finished frame under reduced motion. */
   .logo { width: min(62vw, 300px); height: auto; aspect-ratio: 1; display: block; position: relative; z-index: 1; border-radius: 50%; background: var(--ink); will-change: transform; }
   .home-logo::before { content: ""; position: absolute; left: 50%; top: 50%; width: min(96vw, 560px); aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; will-change: transform, opacity;
-    background: radial-gradient(circle, rgba(31,138,91,.26) 0%, rgba(31,138,91,.12) 30%, rgba(43,94,168,.06) 48%, transparent 68%); animation: glowin 1.4s ease 4.1s both; }
+    background: radial-gradient(circle, rgba(31,138,91,.26) 0%, rgba(31,138,91,.12) 30%, rgba(43,94,168,.06) 48%, transparent 68%); animation: glowin 1.2s ease 3.3s both; }
   @keyframes glowin { from { opacity: 0; } to { opacity: 1; } }
   @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
   @media (prefers-reduced-motion: no-preference) {
     .logo { animation: float 8s ease-in-out 1s infinite; }
-    .home-logo::before { animation: glowin 1.4s ease 4.1s both, pulse 8s ease-in-out 5.5s infinite; }
-    .home-text { animation: fadein .8s ease 1s both; }
+    .home-logo::before { animation: glowin 1.2s ease 3.3s both, pulse 8s ease-in-out 4.5s infinite; }
+    .home-text { animation: fadein .7s ease .8s both; }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     @keyframes pulse { 0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 50% { opacity: .8; transform: translate(-50%, -50%) scale(1.06); } }
   }
@@ -192,7 +192,7 @@
 <main>
 
   <section id="home" class="page logo-stage" aria-label="Smart Docs Ai">
-    <!-- Home animation (2026-11-26, rev 2): wireframe, opens already drawn. Manila folders scattered all round a filing cabinet fly into its comically long top drawer and land in order; the drawer shuts; the cabinet becomes an AI server; Fumi, the Smart Docs Ai agent, pops out beside it, wired to the server. Story plays at 1.6x, loops every 14 s. Drawn on canvas by the script below. -->
+    <!-- Home animation (2026-11-26, rev 2): wireframe, opens already drawn. Manila folders scattered all round a filing cabinet fly into its comically long top drawer and land in order; the drawer shuts; the cabinet becomes an AI server; Fumi, the Smart Docs Ai agent, pops out beside it, wired to the server. Story plays at 2x, loops every 12.5 s. Drawn on canvas by the script below. -->
     <div class="home-intro">
     <div class="home-logo">
     <canvas class="logo" id="docs-logo" width="600" height="600" role="img" aria-label="Smart Docs Ai: scattered folders fly into a filing cabinet that becomes an AI server, and Fumi, the Smart Docs Ai agent, pops out beside it"></canvas>
@@ -459,7 +459,7 @@
 
       // Timeline (s): opens drawn, close in · camera pulls back .7–1.8 · drawer out 1–2 · folders fly 2–4.9 · drawer shuts 5–6 · server and push-in 6.2–7.8 · Fumi 8.1 on · loop at 22.
       // Pace: the story (folders to server) plays at SPEED x; from Fumi's entrance on, time runs at normal speed so her wave and blink stay natural.
-      var SPEED = 1.6, FUMI = 8.1, REAL = 14, LAND = 2, FX = 400, FY = 432;
+      var SPEED = 2, FUMI = 8.1, REAL = 12.5, LAND = 2, FX = 400, FY = 432;
       function sceneT(r) { return r < FUMI / SPEED ? r * SPEED : FUMI + (r - FUMI / SPEED); }
       var CYCLE = sceneT(REAL);
       function draw(t, firstRun) {
