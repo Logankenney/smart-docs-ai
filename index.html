@@ -80,6 +80,10 @@
     @keyframes pulse { 0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 50% { opacity: .8; transform: translate(-50%, -50%) scale(1.06); } }
   }
   @media (prefers-reduced-motion: reduce) { .home-logo::before, .home-text { animation: none; } }
+  .anim-toggle { font: 500 .8rem var(--body); color: var(--fg-2); background: none; border: 0; padding: .3rem .6rem; margin-top: -1rem; cursor: pointer; opacity: .7; transition: opacity .18s ease, color .18s ease; }
+  .anim-toggle:hover, .anim-toggle:focus-visible { opacity: 1; color: var(--accent); }
+  /* Meet Doxie: her portrait on the About page, the same dark round stage as the home mark */
+  .mee { width: min(52vw, 220px); height: auto; aspect-ratio: 1; display: block; margin: .5rem auto 0; border-radius: 50%; background: var(--ink); }
 
   /* Pages: one view at a time, chosen by the URL hash */
   .page { display: none; }
@@ -192,11 +196,12 @@
 <main>
 
   <section id="home" class="page logo-stage" aria-label="Smart Docs Ai">
-    <!-- Home animation (2026-11-26, rev 2): wireframe, opens already drawn. Manila folders scattered all round a filing cabinet fly into its comically long top drawer and land in order; the drawer shuts; the cabinet becomes an AI server; Fumi, the Smart Docs Ai agent, pops out beside it, wired to the server. Story plays at 2x, loops every 12.5 s. Drawn on canvas by the script below. -->
+    <!-- Home animation (2026-11-26, rev 2): wireframe, opens already drawn. Manila folders scattered all round a filing cabinet fly into its comically long top drawer and land in order; the drawer shuts; the cabinet becomes an AI server; Doxie, the Smart Docs Ai agent, pops out beside it, wired to the server. Story plays at 2x, loops every 12.5 s. Drawn on canvas by the script below. -->
     <div class="home-intro">
     <div class="home-logo">
-    <canvas class="logo" id="docs-logo" width="600" height="600" role="img" aria-label="Smart Docs Ai: scattered folders fly into a filing cabinet that becomes an AI server, and Fumi, the Smart Docs Ai agent, pops out beside it"></canvas>
+    <canvas class="logo" id="docs-logo" width="600" height="600" role="img" aria-label="Smart Docs Ai: scattered folders fly into a filing cabinet that becomes an AI server, and Doxie, the Smart Docs Ai agent, pops out beside it"></canvas>
     </div>
+    <button class="anim-toggle" type="button" id="anim-toggle" aria-pressed="false" hidden>Pause animation</button>
     <div class="home-text">
       <h1>Every document. On record.</h1>
       <p class="tagline">AI document control for companies of every size.</p>
@@ -233,7 +238,7 @@
       </div>
 
       <div class="panel" role="tabpanel" id="panel-learn" aria-labelledby="tab-learn" hidden>
-        <div class="col"><h4>What it does</h4><p>Every lesson is kept with the document it changed, so the next revision starts smarter. The AI reads your history, drafts the change summary, writes the redline and chases the approval. It never approves anything. You do.</p></div>
+        <div class="col"><h4>What it does</h4><p>Every lesson is kept with the document it changed, so the next revision starts smarter. Doxie, your AI agent, reads your history, drafts the change summary, writes the redline and chases the approval. She never approves anything. You do.</p></div>
       </div>
     </div>
   </section>
@@ -268,6 +273,10 @@
         <div class="card"><h3>Private</h3><p>Your documents never train anything.</p></div>
         <div class="card"><h3>Yours</h3><p>Your files, your storage, your approval.</p></div>
       </div>
+      <h2 id="doxie-h">Meet Doxie.</h2>
+      <canvas class="mee" id="doxie-portrait" width="360" height="360" role="img" aria-label="Doxie, the Smart Docs Ai agent: a small wireframe girl with pink twin buns and a folder hair clip, waving, then answering with a found folder and a green tick"></canvas>
+      <p class="lede">Doxie is the Smart Docs Ai agent. She has read every document you let her open, every revision and every lesson, and she answers from the record, with the number and revision to prove it. She drafts, files and chases. She never approves. You do.</p>
+      <p class="note">Doxie is an AI, and she always says so.</p>
     </div>
   </section>
 
@@ -277,6 +286,7 @@
       <div class="faq-list">
         <details><summary>What is Smart Docs Ai?</summary><p>Document control with AI inside. Controlled documents, numbered revisions, approvals, an audit trail, a revision log and a PDF of every edit, with lessons learned kept beside the documents they changed.</p></details>
         <details><summary>Is it a document management system?</summary><p>No. Storage tools keep files. Smart Docs Ai keeps the record: which revision is in force, who approved it, what changed and why. You can keep using your storage underneath it.</p></details>
+        <details><summary>Who is Doxie?</summary><p>The Smart Docs Ai agent, and an AI. Ask her where a document is, what changed or who approved it, and she answers from the record with the document number and revision. She never approves a revision. A named person does.</p></details>
         <details><summary>Does the AI change my documents?</summary><p>It drafts, summarises and suggests, and every suggestion is labelled. A named person approves every revision. The AI never writes to a released revision.</p></details>
         <details><summary>Where are my files kept?</summary><p>Where you choose. Hosted by us, or on your own storage with the installable version. Either way they are yours, you can export everything at any time, and nothing you store trains a model for anyone else.</p></details>
         <details><summary>Does it meet ISO 9001?</summary><p>It is built around clause 7.5, documented information: creation, approval, revision, distribution and retention, with the records an auditor asks for. We will say plainly which standards it meets and which it does not yet.</p></details>
@@ -353,8 +363,8 @@
 
     // Home animation (2026-11-26, rev 2): wireframe. The scene opens already drawn: manila folders lie scattered all round a
     // filing cabinet. Its top drawer slides out comically far, the folders fly in and stand in order, the drawer shuts, and
-    // the camera pushes in as the cabinet becomes an AI server. Then Fumi pops out beside it: the Smart Docs Ai agent, wired
-    // to the server, who knows every document inside. Loops every 22 s; a finished frame under reduced motion.
+    // the camera pushes in as the cabinet becomes an AI server. Then Doxie pops out beside it: the Smart Docs Ai agent, wired
+    // to the server, who knows every document inside. Loops every 12.5 s; a pause control under the canvas; a finished frame under reduced motion.
     (function () {
       var cv = document.getElementById('docs-logo'); if (!cv || !cv.getContext) return;
       var ctx = cv.getContext('2d'), W = 600, H = 600;
@@ -400,7 +410,7 @@
         for (var i = -6; i <= 6; i++) line([i * 60, 0, -70], [i * 60, 0, 400], paper, alpha * .3, 1.5);
         for (var j = 0; j <= 8; j++) line([-360, 0, -70 + j * 60], [360, 0, -70 + j * 60], paper, alpha * .3, 1.5); }
 
-      // Fumi, the Smart Docs Ai agent: an original chibi character drawn in the same line style. Twin buns, a folder hair clip,
+      // Doxie, the Smart Docs Ai Mee agent (vMia, virtual micro interactive agent): an original chibi character drawn in the same line style. Twin buns, a folder hair clip,
       // a sailor collar with a bow, and an antenna curl that lights up because she is wired to the server. Local space: feet at 0,0.
       function sk(col, a, w) { ctx.strokeStyle = rgba(col, a); ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke(); }
       function fl(col, a) { ctx.fillStyle = rgba(col, a); ctx.fill(); }
@@ -408,7 +418,7 @@
       function miniFolder(x, y, w, h, a, rot) { ctx.save(); ctx.translate(x, y); ctx.rotate(rot || 0); ctx.beginPath();
         ctx.moveTo(-w / 2, -h / 2); ctx.lineTo(-w / 2 + w * .38, -h / 2); ctx.lineTo(-w / 2 + w * .46, -h / 2 + h * .18); ctx.lineTo(w / 2, -h / 2 + h * .18); ctx.lineTo(w / 2, h / 2); ctx.lineTo(-w / 2, h / 2); ctx.closePath();
         fl(manila, a * .25); sk(manila, a, 2.2); ctx.restore(); }
-      function fumi(t, a) { // t = seconds since she appeared
+      function doxie(t, a, out) { // t = seconds since she appeared; out = when her speech bubble folds away (optional)
         var blink = (t % 3.4) > 3.24 || (t > .2 && t < .34), wave = t > .5 && t < 2.6 ? Math.sin((t - .5) * 9) : 0;
         // shadow, legs, shoes
         ctx.beginPath(); ctx.ellipse(0, 2, 28, 6, 0, 0, 6.283); sk(paper, a * .25, 2);
@@ -450,17 +460,17 @@
         // sparkles
         [[-62, -150, 0], [60, -64, 1.3], [-58, -36, 2.1], [66, -170, 3]].forEach(function (p, i) { var tw = Math.max(0, Math.sin(t * 2.6 + p[2])); star(p[0], p[1], 4 + 4 * tw, i % 2 ? green : blue, a * tw); });
         // speech bubble: a found folder and a tick, after a short "thinking" pause
-        var b = ease(1.6, .35, t); if (b > 0) { var dots = t < 2.3; ctx.save(); ctx.translate(78, -228); ctx.scale(b, b);
+        var b = ease(1.6, .35, t) * (out ? 1 - ease(out, .3, t) : 1); if (b > 0) { var dots = t < 2.3; ctx.save(); ctx.translate(78, -228); ctx.scale(b, b);
           ctx.beginPath(); ctx.moveTo(-32, -20); ctx.lineTo(32, -20); ctx.quadraticCurveTo(40, -20, 40, -12); ctx.lineTo(40, 12); ctx.quadraticCurveTo(40, 20, 32, 20); ctx.lineTo(-14, 20); ctx.lineTo(-26, 34); ctx.lineTo(-22, 20); ctx.lineTo(-32, 20); ctx.quadraticCurveTo(-40, 20, -40, 12); ctx.lineTo(-40, -12); ctx.quadraticCurveTo(-40, -20, -32, -20); fl(ink, a * .9); sk(paper, a, 2.5);
           if (dots) { for (var q = 0; q < 3; q++) { ctx.beginPath(); ctx.arc(-12 + q * 12, 0, 3.2, 0, 6.283); fl(paper, a * (.35 + .65 * (Math.floor(t * 6) % 3 === q))); } }
           else { miniFolder(-12, 1, 26, 19, a, 0); ctx.beginPath(); ctx.moveTo(12, 1); ctx.lineTo(18, 8); ctx.lineTo(29, -8); sk(green, a, 3.5); }
           ctx.restore(); }
       }
 
-      // Timeline (s): opens drawn, close in · camera pulls back .7–1.8 · drawer out 1–2 · folders fly 2–4.9 · drawer shuts 5–6 · server and push-in 6.2–7.8 · Fumi 8.1 on · loop at 22.
-      // Pace: the story (folders to server) plays at SPEED x; from Fumi's entrance on, time runs at normal speed so her wave and blink stay natural.
-      var SPEED = 2, FUMI = 8.1, REAL = 12.5, LAND = 2, FX = 400, FY = 432;
-      function sceneT(r) { return r < FUMI / SPEED ? r * SPEED : FUMI + (r - FUMI / SPEED); }
+      // Timeline (s): opens drawn, close in · camera pulls back .7–1.8 · drawer out 1–2 · folders fly 2–4.9 · drawer shuts 5–6 · server and push-in 6.2–7.8 · Doxie 8.1 on · loop at 22.
+      // Pace: the story (folders to server) plays at SPEED x; from Doxie's entrance on, time runs at normal speed so her wave and blink stay natural.
+      var SPEED = 2, ENTER = 8.1, REAL = 12.5, LAND = 2, FX = 400, FY = 432;
+      function sceneT(r) { return r < ENTER / SPEED ? r * SPEED : ENTER + (r - ENTER / SPEED); }
       var CYCLE = sceneT(REAL);
       function draw(t, firstRun) {
         ctx.clearRect(0, 0, W, H);
@@ -493,21 +503,30 @@
             ctx.beginPath(); ctx.arc(top.x, top.y, 12 + k * 11, Math.PI * 1.2, Math.PI * 1.8); ctx.strokeStyle = rgba(green, ra * (.9 - k * .25)); ctx.lineWidth = 2.5; ctx.stroke(); }
         }
         ctx.restore();
-        // Fumi pops out beside the server; a dashed data line runs from the server to her antenna, with packets travelling along it.
+        // Doxie pops out beside the server; a dashed data line runs from the server to her antenna, with packets travelling along it.
         var pop = back(8.1, .55, t); if (pop > 0) { var ft = t - 8.1, fa = Math.min(1, ease(8.1, .25, t)), bob = Math.sin(ft * 2.2) * 3;
           var from = S(cab(CW, CH - 10, 0)), to = { x: FX + 9 * .95, y: FY + bob - 198 * .95 }, link = ease(8.5, .6, t);
           if (link > 0) { var lx = lerp(from.x, to.x, link), ly = lerp(from.y, to.y, link), mx = (from.x + lx) / 2, my = Math.min(from.y, ly) - 40;
             ctx.beginPath(); ctx.moveTo(from.x, from.y); ctx.quadraticCurveTo(mx, my, lx, ly); ctx.setLineDash([5, 7]); ctx.lineDashOffset = -t * 30; sk(green, fa * .7, 2); ctx.setLineDash([]);
             if (link >= 1) for (var n = 0; n < 2; n++) { var f = ((t * .7 + n * .5) % 1), bx = (1 - f) * (1 - f) * from.x + 2 * (1 - f) * f * mx + f * f * lx, by = (1 - f) * (1 - f) * from.y + 2 * (1 - f) * f * my + f * f * ly;
               ctx.beginPath(); ctx.arc(bx, by, 3, 0, 6.283); fl(n ? blue : green, fa); } }
-          ctx.save(); ctx.translate(FX, FY + bob); ctx.scale(.95 * pop, .95 * pop); fumi(ft, fa); ctx.restore(); }
+          ctx.save(); ctx.translate(FX, FY + bob); ctx.scale(.95 * pop, .95 * pop); doxie(ft, fa); ctx.restore(); }
         ctx.globalAlpha = 1;
       }
-      if (reduce) { draw(12.5, true); return; }
-      var start = null, first = true;
-      function frame(now) { if (document.hidden) { start = null; return; } if (start === null) start = now; var el = (now - start) / 1000; if (el >= REAL) first = false; draw(sceneT(el % REAL), first); requestAnimationFrame(frame); }
+      // Meet Doxie: a portrait on the About page, drawn with the same function on its own small canvas. Waves, thinks, answers, loops every 7 s.
+      var pv = document.getElementById('doxie-portrait'), pctx = pv && pv.getContext ? pv.getContext('2d') : null;
+      function portrait(t) { if (!pctx) return; var keep = ctx; ctx = pctx; ctx.clearRect(0, 0, 360, 360);
+        ctx.save(); ctx.translate(152, 318 + Math.sin(t * 2.2) * 3); doxie(t, 1, 6.4); ctx.restore(); ctx = keep; }
+      if (reduce) { draw(12.5, true); portrait(3); return; }
+      // Pause control (WCAG 2.2.2): stops both animations; play resumes where they stopped.
+      var start = null, first = true, paused = false, el = 0, resume = 0, pbtn = document.getElementById('anim-toggle');
+      function frame(now) { if (document.hidden || paused) { start = null; return; } if (start === null) start = now - resume * 1000;
+        el = (now - start) / 1000; if (el >= REAL) first = false; draw(sceneT(el % REAL), first); portrait(el % 7); requestAnimationFrame(frame); }
       requestAnimationFrame(frame);
-      document.addEventListener('visibilitychange', function () { if (!document.hidden) { start = null; first = true; requestAnimationFrame(frame); } });
+      if (pbtn) { pbtn.hidden = false; pbtn.addEventListener('click', function () { paused = !paused;
+        pbtn.setAttribute('aria-pressed', paused ? 'true' : 'false'); pbtn.textContent = paused ? 'Play animation' : 'Pause animation';
+        if (paused) resume = el; else requestAnimationFrame(frame); }); }
+      document.addEventListener('visibilitychange', function () { if (!document.hidden && !paused) { start = null; resume = 0; first = true; requestAnimationFrame(frame); } });
     })();
 
     // Copy the address
