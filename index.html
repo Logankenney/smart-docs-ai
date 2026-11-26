@@ -69,13 +69,13 @@
   /* Home animation: wireframe folders, long drawer, cabinet to AI server. Canvas-drawn; a finished frame under reduced motion. */
   .logo { width: min(62vw, 300px); height: auto; aspect-ratio: 1; display: block; position: relative; z-index: 1; border-radius: 50%; background: var(--ink); will-change: transform; }
   .home-logo::before { content: ""; position: absolute; left: 50%; top: 50%; width: min(96vw, 560px); aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; will-change: transform, opacity;
-    background: radial-gradient(circle, rgba(31,138,91,.26) 0%, rgba(31,138,91,.12) 30%, rgba(43,94,168,.06) 48%, transparent 68%); animation: glowin 2s ease 8.4s both; }
+    background: radial-gradient(circle, rgba(31,138,91,.26) 0%, rgba(31,138,91,.12) 30%, rgba(43,94,168,.06) 48%, transparent 68%); animation: glowin 2s ease 6.6s both; }
   @keyframes glowin { from { opacity: 0; } to { opacity: 1; } }
   @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
   @media (prefers-reduced-motion: no-preference) {
     .logo { animation: float 8s ease-in-out 1s infinite; }
-    .home-logo::before { animation: glowin 2s ease 8.4s both, pulse 8s ease-in-out 10s infinite; }
-    .home-text { animation: fadein .8s ease 2.6s both; }
+    .home-logo::before { animation: glowin 2s ease 6.6s both, pulse 8s ease-in-out 8.6s infinite; }
+    .home-text { animation: fadein .8s ease 1.6s both; }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     @keyframes pulse { 0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 50% { opacity: .8; transform: translate(-50%, -50%) scale(1.06); } }
   }
@@ -192,10 +192,10 @@
 <main>
 
   <section id="home" class="page logo-stage" aria-label="Smart Docs Ai">
-    <!-- Home animation (2026-11-26): wireframe. Manila folders scattered on a floor fly into a filing cabinet's comically long top drawer and land in order; the drawer shuts; the cabinet becomes an AI server. Loops every 24 s. Drawn on canvas by the script below. -->
+    <!-- Home animation (2026-11-26, rev 2): wireframe, opens already drawn. Manila folders scattered all round a filing cabinet fly into its comically long top drawer and land in order; the drawer shuts; the cabinet becomes an AI server; Fumi, the Smart Docs Ai agent, pops out beside it, wired to the server. Loops every 22 s. Drawn on canvas by the script below. -->
     <div class="home-intro">
     <div class="home-logo">
-    <canvas class="logo" id="docs-logo" width="600" height="600" role="img" aria-label="Smart Docs Ai: scattered folders fly into a filing cabinet that becomes an AI server"></canvas>
+    <canvas class="logo" id="docs-logo" width="600" height="600" role="img" aria-label="Smart Docs Ai: scattered folders fly into a filing cabinet that becomes an AI server, and Fumi, the Smart Docs Ai agent, pops out beside it"></canvas>
     </div>
     <div class="home-text">
       <h1>Every document. On record.</h1>
@@ -351,94 +351,160 @@
     window.addEventListener('hashchange', show);
     show();
 
-    // Home animation (2026-11-26): wireframe. Manila folders lie scattered on a floor grid, then fly one by one into a filing
-    // cabinet's comically long top drawer and land in order; the drawer shuts; the cabinet turns into an AI server (rack units,
-    // lights, a pulse ring, signal arcs). Loops every 24 s. A finished frame under reduced motion.
+    // Home animation (2026-11-26, rev 2): wireframe. The scene opens already drawn: manila folders lie scattered all round a
+    // filing cabinet. Its top drawer slides out comically far, the folders fly in and stand in order, the drawer shuts, and
+    // the camera pushes in as the cabinet becomes an AI server. Then Fumi pops out beside it: the Smart Docs Ai agent, wired
+    // to the server, who knows every document inside. Loops every 22 s; a finished frame under reduced motion.
     (function () {
       var cv = document.getElementById('docs-logo'); if (!cv || !cv.getContext) return;
       var ctx = cv.getContext('2d'), W = 600, H = 600;
       var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var paper = '247,245,239', manila = '233,201,127', green = '31,138,91', blue = '95,143,214';
+      var paper = '247,245,239', manila = '233,201,127', green = '31,138,91', blue = '95,143,214', pink = '255,150,190', ink = '23,32,42';
       // Perspective: x right, y up, z into the scene; the camera sits above the floor looking slightly down.
-      var F = 420, CAMY = 170, HORIZ = 230;
+      var F = 420, CAMY = 170, HORIZ = 215;
       function P(p) { var s = F / (F + p[2]); return { x: 300 + p[0] * s, y: HORIZ + (CAMY - p[1]) * s }; }
-      function line(a, b, col, alpha, w) { var p = P(a), q = P(b); ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.strokeStyle = 'rgba(' + col + ',' + alpha + ')'; ctx.lineWidth = w || 3; ctx.lineCap = 'round'; ctx.stroke(); }
-      function poly(pts, col, alpha, w, reveal) { // closed wireframe polygon, optionally drawn only partway round
-        reveal = reveal == null ? 1 : reveal; var n = pts.length, per = 1 / n;
-        for (var i = 0; i < n; i++) { var r = Math.min(1, Math.max(0, (reveal - i * per) / per)); if (r <= 0) break;
-          var a = pts[i], b = pts[(i + 1) % n]; line(a, [a[0] + (b[0] - a[0]) * r, a[1] + (b[1] - a[1]) * r, a[2] + (b[2] - a[2]) * r], col, alpha, w); } }
-      function dot(p, col, alpha, r) { var q = P(p); ctx.beginPath(); ctx.arc(q.x, q.y, r, 0, 6.283); ctx.fillStyle = 'rgba(' + col + ',' + alpha + ')'; ctx.fill(); }
+      function rgba(c, a) { return 'rgba(' + c + ',' + a + ')'; }
+      function line(a, b, col, alpha, w) { var p = P(a), q = P(b); ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.strokeStyle = rgba(col, alpha); ctx.lineWidth = w || 3; ctx.lineCap = 'round'; ctx.stroke(); }
+      function poly(pts, col, alpha, w) { for (var i = 0; i < pts.length; i++) line(pts[i], pts[(i + 1) % pts.length], col, alpha, w); }
+      function dot(p, col, alpha, r) { var q = P(p); ctx.beginPath(); ctx.arc(q.x, q.y, r, 0, 6.283); ctx.fillStyle = rgba(col, alpha); ctx.fill(); }
       function ease(t0, dur, t) { var v = Math.max(0, Math.min(1, (t - t0) / dur)); return v * v * (3 - 2 * v); }
+      function back(t0, dur, t) { var v = Math.max(0, Math.min(1, (t - t0) / dur)), c = 2.2; return v <= 0 ? 0 : 1 + (c + 1) * Math.pow(v - 1, 3) + c * Math.pow(v - 1, 2); } // overshoot, for the pop
       function lerp(a, b, u) { return a + (b - a) * u; }
-      // The cabinet stands at the back right, turned so its front faces down-left; d points out of the front, e runs along the front.
-      var C = [150, 0, 190], d = [-.75, 0, -.66], e = [.66, 0, -.75];
-      var CW = 50, CD = 90, CH = 150, DH = 50, LONG = 340;
-      function cab(u, y, v) { return [C[0] + e[0] * u + d[0] * v, y, C[2] + e[2] * u + d[2] * v]; } // cabinet space: u along the front, y up, v out of the front
+      // The cabinet stands in the middle, turned so its front faces down-left; d points out of the front, e runs along the front.
+      var C = [40, 0, 170], d = [-.75, 0, -.66], e = [.66, 0, -.75];
+      var CW = 50, CD = 90, CH = 150, DH = 50, LONG = 300;
+      function cab(u, y, v) { return [C[0] + e[0] * u + d[0] * v, y, C[2] + e[2] * u + d[2] * v]; } // u along the front, y up, v out of the front
       // Folder: a rectangle with a tab, lying flat in local space; placed by position, yaw (turn on the floor) and pitch (lift / stand up).
-      var FW = 36, FD = 26, STAND_YAW = Math.atan2(.75, .66);
-      function folderPts(tr) { var pts = [[-FW, 0, -FD], [-FW, 0, -FD - 8], [-FW + 22, 0, -FD - 8], [-FW + 22, 0, -FD], [FW, 0, -FD], [FW, 0, FD], [-FW, 0, FD]];
+      var FW = 34, FD = 24, STAND_YAW = Math.atan2(.75, .66);
+      function folderPts(tr) { var pts = [[-FW, 0, -FD], [-FW, 0, -FD - 8], [-FW + 21, 0, -FD - 8], [-FW + 21, 0, -FD], [FW, 0, -FD], [FW, 0, FD], [-FW, 0, FD]];
         var cy = Math.cos(tr.yaw), sy = Math.sin(tr.yaw), cp = Math.cos(tr.pitch), sp = Math.sin(tr.pitch), out = [];
         for (var i = 0; i < pts.length; i++) { var x = pts[i][0], y = pts[i][1], z = pts[i][2];
           var y1 = y * cp - z * sp, z1 = y * sp + z * cp, x2 = x * cy + z1 * sy, z2 = -x * sy + z1 * cy;
           out.push([x2 + tr.x, y1 + tr.y, z2 + tr.z]); } return out; }
-      // Nine folders dropped on the floor: x, z, yaw, pitch, height. Fixed, so the mess is the same every visit.
-      var scatter = [[-190, -30, .9, .12, 0], [-120, 70, -.4, 0, 0], [-150, 130, 2.3, 0, 5], [-60, 10, 1.2, .25, 0], [-20, 120, -.8, 0, 0], [30, -30, .3, 0, 6], [60, 70, 2.8, .18, 0], [-95, -5, -1.6, 0, 10], [0, 40, 1.9, 0, 12]];
+      // Ten folders dropped all round the cabinet: angle (deg, 270 = in front), distance, yaw, tilt, height. Fixed, so the mess is the same every visit.
+      var mid = cab(0, 0, -CD / 2), ring = [[268, 165, .9, .12, 0], [228, 205, -.4, 0, 4], [305, 200, 2.3, 0, 0], [192, 215, 1.2, .22, 0], [340, 210, -.8, 0, 6], [155, 220, .3, 0, 0], [15, 215, 2.8, .16, 0], [110, 170, -1.6, 0, 8], [62, 190, 1.9, 0, 0], [248, 120, .6, .2, 12]];
+      var scatter = ring.map(function (r) { var a = r[0] * Math.PI / 180; return [mid[0] + r[1] * 1.25 * Math.cos(a), mid[2] + r[1] * .75 * Math.sin(a), r[2], r[3], r[4]]; });
       var NF = scatter.length;
-      function cabinetBox(alpha, reveal) {
-        poly([cab(-CW, 0, 0), cab(CW, 0, 0), cab(CW, CH, 0), cab(-CW, CH, 0)], paper, alpha, 3, reveal);
-        poly([cab(-CW, 0, -CD), cab(CW, 0, -CD), cab(CW, CH, -CD), cab(-CW, CH, -CD)], paper, alpha * .45, 2, reveal);
-        var r2 = Math.max(0, (reveal - .5) * 2); if (r2 > 0) { [[-CW, 0], [CW, 0], [CW, CH], [-CW, CH]].forEach(function (c) { line(cab(c[0], c[1], 0), cab(c[0], c[1], -CD * r2), paper, alpha * .45, 2); }); } }
-      function drawerFace(y0, y1, v, alpha, w) { poly([cab(-CW + 4, y0, v), cab(CW - 4, y0, v), cab(CW - 4, y1, v), cab(-CW + 4, y1, v)], paper, alpha, w || 3);
+      function cabinetBox(alpha) {
+        poly([cab(-CW, 0, 0), cab(CW, 0, 0), cab(CW, CH, 0), cab(-CW, CH, 0)], paper, alpha, 3);
+        poly([cab(-CW, 0, -CD), cab(CW, 0, -CD), cab(CW, CH, -CD), cab(-CW, CH, -CD)], paper, alpha * .45, 2);
+        [[-CW, 0], [CW, 0], [CW, CH], [-CW, CH]].forEach(function (c) { line(cab(c[0], c[1], 0), cab(c[0], c[1], -CD), paper, alpha * .45, 2); }); }
+      function drawerFace(y0, y1, v, alpha) { poly([cab(-CW + 4, y0, v), cab(CW - 4, y0, v), cab(CW - 4, y1, v), cab(-CW + 4, y1, v)], paper, alpha, 3);
         line(cab(-14, (y0 + y1) / 2, v), cab(14, (y0 + y1) / 2, v), blue, alpha, 4); }
       function drawerBody(v, alpha) { // the open drawer: rails from the cabinet front out to the drawer front, a hanging rail down the middle
         if (v < 1) return; var y0 = CH - DH + 4;
         line(cab(-CW + 4, y0, v), cab(-CW + 4, y0, 0), paper, alpha * .8, 2); line(cab(CW - 4, y0, v), cab(CW - 4, y0, 0), paper, alpha * .8, 2);
         line(cab(-CW + 4, CH - 4, v), cab(-CW + 4, CH - 4, 0), paper, alpha * .35, 2); line(cab(CW - 4, CH - 4, v), cab(CW - 4, CH - 4, 0), paper, alpha * .35, 2);
         line(cab(0, CH - 6, v - 6), cab(0, CH - 6, 0), blue, alpha * .6, 2); }
-      function floor(alpha, reveal) {
-        for (var i = -4; i <= 4; i++) { var r = Math.min(1, reveal * 1.6 - Math.abs(i) * .12); if (r <= 0) continue; line([i * 60, 0, -70], [i * 60, 0, -70 + 300 * r], paper, alpha * .35, 1.5); }
-        for (var j = 0; j <= 5; j++) { var r2 = Math.min(1, reveal * 1.6 - j * .12); if (r2 <= 0) continue; line([-240, 0, -70 + j * 60], [-240 + 480 * r2, 0, -70 + j * 60], paper, alpha * .35, 1.5); } }
-      // Timeline (s): floor 0–1 · folders 0.6–2.2 · cabinet 2.2–3 · drawer out 3–4 · folders fly 4–6.7 · drawer shuts 6.8–7.8 · server 8–9.6 · idle · loop at 24.
-      var CYCLE = 24;
-      function draw(t) {
+      function floor(alpha) {
+        for (var i = -6; i <= 6; i++) line([i * 60, 0, -70], [i * 60, 0, 400], paper, alpha * .3, 1.5);
+        for (var j = 0; j <= 8; j++) line([-360, 0, -70 + j * 60], [360, 0, -70 + j * 60], paper, alpha * .3, 1.5); }
+
+      // Fumi, the Smart Docs Ai agent: an original chibi character drawn in the same line style. Twin buns, a folder hair clip,
+      // a sailor collar with a bow, and an antenna curl that lights up because she is wired to the server. Local space: feet at 0,0.
+      function sk(col, a, w) { ctx.strokeStyle = rgba(col, a); ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke(); }
+      function fl(col, a) { ctx.fillStyle = rgba(col, a); ctx.fill(); }
+      function star(x, y, r, col, a) { ctx.beginPath(); ctx.moveTo(x, y - r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.quadraticCurveTo(x, y, x, y + r); ctx.quadraticCurveTo(x, y, x - r, y); ctx.quadraticCurveTo(x, y, x, y - r); fl(col, a); }
+      function miniFolder(x, y, w, h, a, rot) { ctx.save(); ctx.translate(x, y); ctx.rotate(rot || 0); ctx.beginPath();
+        ctx.moveTo(-w / 2, -h / 2); ctx.lineTo(-w / 2 + w * .38, -h / 2); ctx.lineTo(-w / 2 + w * .46, -h / 2 + h * .18); ctx.lineTo(w / 2, -h / 2 + h * .18); ctx.lineTo(w / 2, h / 2); ctx.lineTo(-w / 2, h / 2); ctx.closePath();
+        fl(manila, a * .25); sk(manila, a, 2.2); ctx.restore(); }
+      function fumi(t, a) { // t = seconds since she appeared
+        var blink = (t % 3.4) > 3.24 || (t > .2 && t < .34), wave = t > .5 && t < 2.6 ? Math.sin((t - .5) * 9) : 0;
+        // shadow, legs, shoes
+        ctx.beginPath(); ctx.ellipse(0, 2, 28, 6, 0, 0, 6.283); sk(paper, a * .25, 2);
+        ctx.beginPath(); ctx.moveTo(-9, -30); ctx.lineTo(-9, -8); ctx.moveTo(9, -30); ctx.lineTo(9, -8); sk(paper, a, 3);
+        ctx.beginPath(); ctx.ellipse(-11, -5, 8, 4.5, 0, 0, 6.283); ctx.moveTo(19, -5); ctx.ellipse(11, -5, 8, 4.5, 0, 0, 6.283); sk(pink, a, 2.5);
+        // dress with pleats, sailor collar, bow
+        ctx.beginPath(); ctx.moveTo(-13, -78); ctx.lineTo(-33, -30); ctx.lineTo(33, -30); ctx.lineTo(13, -78); ctx.closePath(); fl(paper, a * .06); sk(paper, a, 3);
+        ctx.beginPath(); [-17, -6, 6, 17].forEach(function (x) { ctx.moveTo(x, -43); ctx.lineTo(x * 1.08, -31); }); sk(paper, a * .5, 1.5);
+        ctx.beginPath(); ctx.moveTo(-17, -76); ctx.lineTo(0, -58); ctx.lineTo(17, -76); sk(blue, a, 2.5);
+        ctx.beginPath(); ctx.moveTo(0, -66); ctx.lineTo(-11, -72); ctx.lineTo(-11, -60); ctx.closePath(); ctx.moveTo(0, -66); ctx.lineTo(11, -72); ctx.lineTo(11, -60); ctx.closePath(); fl(pink, a * .85);
+        // arms: one hugs a little folder, the other waves
+        ctx.beginPath(); ctx.moveTo(-13, -72); ctx.lineTo(-24, -52); sk(paper, a, 3);
+        miniFolder(-30, -46, 22, 16, a, -.25);
+        var ang = 1.05 + .45 * wave, hx = 13 + 27 * Math.cos(ang), hy = -72 - 27 * Math.sin(ang);
+        ctx.beginPath(); ctx.moveTo(13, -72); ctx.lineTo(hx, hy); sk(paper, a, 3); ctx.beginPath(); ctx.arc(hx, hy, 4, 0, 6.283); sk(paper, a, 2.5);
+        // head
+        ctx.beginPath(); ctx.arc(0, -122, 44, 0, 6.283); fl(ink, a * .9); sk(paper, a, 3);
+        // hair: crown, side locks, zig-zag fringe, twin buns with swirls
+        ctx.beginPath(); ctx.arc(0, -122, 48, Math.PI * .92, Math.PI * 2.08); sk(pink, a, 3);
+        ctx.beginPath(); ctx.moveTo(-47, -114); ctx.quadraticCurveTo(-52, -92, -42, -76); ctx.moveTo(47, -114); ctx.quadraticCurveTo(52, -92, 42, -76); sk(pink, a, 3);
+        ctx.beginPath(); var fr = [[-43, -132], [-33, -113], [-22, -133], [-11, -111], [0, -133], [11, -111], [22, -133], [33, -113], [43, -132]];
+        ctx.moveTo(fr[0][0], fr[0][1]); for (var i = 1; i < fr.length; i += 2) ctx.quadraticCurveTo(fr[i][0], fr[i][1], fr[i + 1][0], fr[i + 1][1]); sk(pink, a, 2.5); // soft scalloped fringe
+        [-1, 1].forEach(function (s) { ctx.beginPath(); ctx.arc(38 * s, -163, 15, 0, 6.283); fl(pink, a * .12); sk(pink, a, 3); ctx.beginPath(); ctx.arc(38 * s, -163, 7, .5, 4.2); sk(pink, a * .7, 2); });
+        miniFolder(31, -152, 15, 11, a, .35); // hair clip: a tiny folder, because she files things
+        // antenna curl with the server signal at its tip
+        ctx.beginPath(); ctx.moveTo(2, -169); ctx.quadraticCurveTo(-8, -192, 9, -198); sk(pink, a, 2.5);
+        var glow = .55 + .45 * Math.sin(t * 5); ctx.beginPath(); ctx.arc(9, -198, 4.5, 0, 6.283); fl(green, a);
+        ctx.beginPath(); ctx.arc(9, -198, 8 + 3 * glow, 0, 6.283); sk(green, a * .4 * glow, 2);
+        // face: big glossy eyes (or happy closed eyes on a blink), lashes, blush with hatching, a small cat mouth
+        [-1, 1].forEach(function (s) { var ex = 16 * s, ey = -102;
+          if (blink) { ctx.beginPath(); ctx.moveTo(ex - 9, ey); ctx.quadraticCurveTo(ex, ey - 9, ex + 9, ey); sk(paper, a, 3); }
+          else { ctx.beginPath(); ctx.ellipse(ex, ey, 9, 12, 0, 0, 6.283); fl(ink, a); sk(paper, a, 2.5);
+            ctx.beginPath(); ctx.ellipse(ex, ey + 3, 6.5, 7.5, 0, 0, 6.283); fl(green, a * .9);
+            ctx.beginPath(); ctx.arc(ex - 3, ey - 5, 3.4, 0, 6.283); fl(paper, a); ctx.beginPath(); ctx.arc(ex + 3, ey + 5, 1.6, 0, 6.283); fl(paper, a); }
+          ctx.beginPath(); ctx.moveTo(ex + 8 * s, ey - 9); ctx.lineTo(ex + 13 * s, ey - 13); sk(paper, a, 2);
+          ctx.beginPath(); ctx.ellipse(29 * s, -88, 7, 4, 0, 0, 6.283); fl(pink, a * .45);
+          ctx.beginPath(); for (var k = -1; k <= 1; k++) { ctx.moveTo(29 * s + k * 4 - 2, -86); ctx.lineTo(29 * s + k * 4 + 2, -91); } sk(pink, a * .9, 1.5); });
+        ctx.beginPath(); ctx.arc(-3, -89, 3, 0, Math.PI); ctx.moveTo(6, -89); ctx.arc(3, -89, 3, 0, Math.PI); sk(paper, a, 2);
+        // sparkles
+        [[-62, -150, 0], [60, -64, 1.3], [-58, -36, 2.1], [66, -170, 3]].forEach(function (p, i) { var tw = Math.max(0, Math.sin(t * 2.6 + p[2])); star(p[0], p[1], 4 + 4 * tw, i % 2 ? green : blue, a * tw); });
+        // speech bubble: a found folder and a tick, after a short "thinking" pause
+        var b = ease(1.6, .35, t); if (b > 0) { var dots = t < 2.3; ctx.save(); ctx.translate(78, -228); ctx.scale(b, b);
+          ctx.beginPath(); ctx.moveTo(-32, -20); ctx.lineTo(32, -20); ctx.quadraticCurveTo(40, -20, 40, -12); ctx.lineTo(40, 12); ctx.quadraticCurveTo(40, 20, 32, 20); ctx.lineTo(-14, 20); ctx.lineTo(-26, 34); ctx.lineTo(-22, 20); ctx.lineTo(-32, 20); ctx.quadraticCurveTo(-40, 20, -40, 12); ctx.lineTo(-40, -12); ctx.quadraticCurveTo(-40, -20, -32, -20); fl(ink, a * .9); sk(paper, a, 2.5);
+          if (dots) { for (var q = 0; q < 3; q++) { ctx.beginPath(); ctx.arc(-12 + q * 12, 0, 3.2, 0, 6.283); fl(paper, a * (.35 + .65 * (Math.floor(t * 6) % 3 === q))); } }
+          else { miniFolder(-12, 1, 26, 19, a, 0); ctx.beginPath(); ctx.moveTo(12, 1); ctx.lineTo(18, 8); ctx.lineTo(29, -8); sk(green, a, 3.5); }
+          ctx.restore(); }
+      }
+
+      // Timeline (s): opens drawn, close in · camera pulls back .7–1.8 · drawer out 1–2 · folders fly 2–4.9 · drawer shuts 5–6 · server and push-in 6.2–7.8 · Fumi 8.1 on · loop at 22.
+      var CYCLE = 22, LAND = 2, FX = 400, FY = 432;
+      function draw(t, firstRun) {
         ctx.clearRect(0, 0, W, H);
-        ctx.globalAlpha = Math.min(ease(0, .4, t), 1 - ease(CYCLE - .6, .6, t));
-        var morph = ease(8, 1.6, t), cabR = ease(2.2, .8, t);
-        ctx.save(); if (morph > 0) { // the camera pushes in on the cabinet as it becomes the server, so the server ends up as the hero mark
-          var cc = P(cab(0, CH * .5, -CD / 2)), z = lerp(1, 1.85, morph), tx = lerp(cc.x, 300, morph), ty = lerp(cc.y, 300, morph);
-          ctx.translate(tx - z * cc.x, ty - z * cc.y); ctx.scale(z, z); }
-        floor(1 - .75 * morph, ease(0, 1, t));
-        if (cabR > 0) cabinetBox(1, cabR);
-        var open = ease(3, 1, t) - ease(6.8, 1, t), v = LONG * open; // how far the top drawer is out
-        if (cabR > 0 && morph < 1) { var a0 = Math.min(cabR, 1 - morph); drawerFace(CH - DH + 4, CH - 4, v, a0, 3); drawerBody(v, a0);
-          drawerFace(4, DH - 4, 0, a0, 3); drawerFace(DH + 4, 2 * DH - 4, 0, a0, 3); }
-        for (var i = 0; i < NF; i++) { var sc = scatter[i], appear = ease(.6 + i * .17, .5, t); if (appear <= 0) continue;
-          var fly = ease(4 + i * .22, .9, t), slotV = v - 22 - i * 33, slot = cab(0, 0, slotV); // lands standing up, front to back, one slot each
+        ctx.globalAlpha = Math.min(firstRun ? 1 : ease(0, .4, t), 1 - ease(CYCLE - .6, .6, t));
+        var morph = ease(6.2, 1.6, t), pull = ease(.7, 1.1, t); // opens close on the mess, pulls back as the drawer comes out, pushes in on the server
+        var cc = P(cab(0, CH * .5, -CD / 2)), z = lerp(lerp(1.3, 1, pull), 1.6, morph), tx = lerp(lerp(300, cc.x, pull), 215, morph), ty = lerp(lerp(330, cc.y, pull), 285, morph), ox = tx - z * cc.x, oy = ty - z * cc.y;
+        function S(p) { var q = P(p); return { x: ox + z * q.x, y: oy + z * q.y }; } // a scene point on screen, after the push-in
+        ctx.save(); ctx.translate(ox, oy); ctx.scale(z, z);
+        floor(1 - .7 * morph); cabinetBox(1);
+        var open = ease(1, 1, t) - ease(5, 1, t), v = LONG * open; // how far the top drawer is out
+        if (morph < 1) { var a0 = 1 - morph; drawerFace(CH - DH + 4, CH - 4, v, a0); drawerBody(v, a0); drawerFace(4, DH - 4, 0, a0); drawerFace(DH + 4, 2 * DH - 4, 0, a0); }
+        for (var i = 0; i < NF; i++) { var sc = scatter[i];
+          var fly = ease(LAND + i * .22, .9, t), slotV = v - 22 - i * 26, slot = cab(0, 0, slotV); // lands standing up, front to back, one slot each
           var tr = { x: lerp(sc[0], slot[0], fly), z: lerp(sc[1], slot[2], fly), yaw: lerp(sc[2], STAND_YAW, fly), pitch: lerp(sc[3], -Math.PI / 2, fly), y: lerp(sc[4], CH - DH + FD, fly) + Math.sin(Math.PI * fly) * 170 };
           var alpha = 1; if (fly >= 1 && slotV < 12) alpha = Math.max(0, (slotV + 18) / 30); // slides out of sight as the drawer shuts
           if (morph > 0) alpha = Math.min(alpha, 1 - morph); if (alpha <= 0) continue;
-          poly(folderPts(tr), manila, alpha, 3, fly > 0 ? 1 : appear);
-          if (fly <= 0 && appear >= 1) { var sh = folderPts({ x: tr.x + 6, z: tr.z + 10, yaw: tr.yaw, pitch: tr.pitch, y: tr.y + 2 }); line(sh[4], sh[5], paper, .45, 2); line(sh[5], sh[6], paper, .45, 2); } // a loose sheet sticking out
+          poly(folderPts(tr), manila, alpha, 3);
+          if (fly <= 0) { var sh = folderPts({ x: tr.x + 6, z: tr.z + 10, yaw: tr.yaw, pitch: tr.pitch, y: tr.y + 2 }); line(sh[4], sh[5], paper, .45, 2); line(sh[5], sh[6], paper, .45, 2); } // a loose sheet sticking out
         }
         if (morph > 0) { // the front becomes six rack units with lights; the Ai core pulses; signal arcs rise from the top
           for (var u = 0; u < 6; u++) { var yy = lerp([4, 46, 54, 96, 104, 146][u], 6 + u * 23.5, morph);
             line(cab(-CW + 4, yy, 0), cab(CW - 4, yy, 0), paper, morph * (u % 2 ? .9 : .5), u % 2 ? 2.5 : 1.5);
             var on = Math.sin(t * 3.1 + u * 1.7) > .2 ? 1 : .25; dot(cab(CW - 12, yy + 11, 1), u % 3 ? green : blue, morph * on, 3.2); }
-          var c = P(cab(-8, CH * .5, 1)), ring = ((t - 8) % 2.4) / 2.4;
-          ctx.beginPath(); ctx.arc(c.x, c.y, 13, 0, 6.283); ctx.strokeStyle = 'rgba(' + green + ',' + morph + ')'; ctx.lineWidth = 3; ctx.stroke();
-          ctx.beginPath(); ctx.arc(c.x, c.y, 3.5, 0, 6.283); ctx.fillStyle = 'rgba(' + green + ',' + morph + ')'; ctx.fill();
-          if (morph >= 1) { ctx.beginPath(); ctx.arc(c.x, c.y, 13 + 24 * ring, 0, 6.283); ctx.strokeStyle = 'rgba(' + green + ',' + (.6 * (1 - ring)) + ')'; ctx.lineWidth = 2; ctx.stroke(); }
+          var c = P(cab(-8, CH * .5, 1)), pr = ((t - 6.2) % 2.4) / 2.4;
+          ctx.beginPath(); ctx.arc(c.x, c.y, 13, 0, 6.283); ctx.strokeStyle = rgba(green, morph); ctx.lineWidth = 3; ctx.stroke();
+          ctx.beginPath(); ctx.arc(c.x, c.y, 3.5, 0, 6.283); ctx.fillStyle = rgba(green, morph); ctx.fill();
+          if (morph >= 1) { ctx.beginPath(); ctx.arc(c.x, c.y, 13 + 24 * pr, 0, 6.283); ctx.strokeStyle = rgba(green, .6 * (1 - pr)); ctx.lineWidth = 2; ctx.stroke(); }
           var top = P(cab(0, CH + 14, -CD / 2));
           for (var k = 0; k < 3; k++) { var ra = Math.max(0, Math.min(1, morph * 3 - k)); if (ra <= 0) break;
-            ctx.beginPath(); ctx.arc(top.x, top.y, 12 + k * 11, Math.PI * 1.2, Math.PI * 1.8); ctx.strokeStyle = 'rgba(' + green + ',' + (ra * (.9 - k * .25)) + ')'; ctx.lineWidth = 2.5; ctx.stroke(); }
+            ctx.beginPath(); ctx.arc(top.x, top.y, 12 + k * 11, Math.PI * 1.2, Math.PI * 1.8); ctx.strokeStyle = rgba(green, ra * (.9 - k * .25)); ctx.lineWidth = 2.5; ctx.stroke(); }
         }
-        ctx.restore(); ctx.globalAlpha = 1;
+        ctx.restore();
+        // Fumi pops out beside the server; a dashed data line runs from the server to her antenna, with packets travelling along it.
+        var pop = back(8.1, .55, t); if (pop > 0) { var ft = t - 8.1, fa = Math.min(1, ease(8.1, .25, t)), bob = Math.sin(ft * 2.2) * 3;
+          var from = S(cab(CW, CH - 10, 0)), to = { x: FX + 9 * .95, y: FY + bob - 198 * .95 }, link = ease(8.5, .6, t);
+          if (link > 0) { var lx = lerp(from.x, to.x, link), ly = lerp(from.y, to.y, link), mx = (from.x + lx) / 2, my = Math.min(from.y, ly) - 40;
+            ctx.beginPath(); ctx.moveTo(from.x, from.y); ctx.quadraticCurveTo(mx, my, lx, ly); ctx.setLineDash([5, 7]); ctx.lineDashOffset = -t * 30; sk(green, fa * .7, 2); ctx.setLineDash([]);
+            if (link >= 1) for (var n = 0; n < 2; n++) { var f = ((t * .7 + n * .5) % 1), bx = (1 - f) * (1 - f) * from.x + 2 * (1 - f) * f * mx + f * f * lx, by = (1 - f) * (1 - f) * from.y + 2 * (1 - f) * f * my + f * f * ly;
+              ctx.beginPath(); ctx.arc(bx, by, 3, 0, 6.283); fl(n ? blue : green, fa); } }
+          ctx.save(); ctx.translate(FX, FY + bob); ctx.scale(.95 * pop, .95 * pop); fumi(ft, fa); ctx.restore(); }
+        ctx.globalAlpha = 1;
       }
-      if (reduce) { draw(10); return; }
-      var start = null;
-      function frame(now) { if (document.hidden) { start = null; return; } if (start === null) start = now; draw(((now - start) / 1000) % CYCLE); requestAnimationFrame(frame); }
+      if (reduce) { draw(12.5, true); return; }
+      var start = null, first = true;
+      function frame(now) { if (document.hidden) { start = null; return; } if (start === null) start = now; var el = (now - start) / 1000; if (el >= CYCLE) first = false; draw(el % CYCLE, first); requestAnimationFrame(frame); }
       requestAnimationFrame(frame);
-      document.addEventListener('visibilitychange', function () { if (!document.hidden) { start = null; requestAnimationFrame(frame); } });
+      document.addEventListener('visibilitychange', function () { if (!document.hidden) { start = null; first = true; requestAnimationFrame(frame); } });
     })();
 
     // Copy the address
