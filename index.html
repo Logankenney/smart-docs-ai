@@ -199,7 +199,7 @@
     <!-- Home animation (2026-11-26, rev 2): wireframe, opens already drawn. Manila folders scattered all round a filing cabinet fly into its comically long top drawer and land in order; the drawer shuts; the cabinet becomes an AI server; Doxie, the Smart Docs Ai agent, pops out beside it, wired to the server. Story plays at 2x, loops every 12.5 s. Drawn on canvas by the script below. -->
     <div class="home-intro">
     <div class="home-logo">
-    <canvas class="logo" id="docs-logo" width="600" height="600" role="img" aria-label="Smart Docs Ai: scattered folders fly into a filing cabinet that becomes an AI server, and Doxie, the Smart Docs Ai agent, pops out beside it"></canvas>
+    <canvas class="logo" id="docs-logo" width="600" height="600" role="img" aria-label="Smart Docs Ai: scattered folders fly into a filing cabinet that becomes an AI server, and Doxie, the Smart Docs Ai visual agent, pops out beside it"></canvas>
     </div>
     <button class="anim-toggle" type="button" id="anim-toggle" aria-pressed="false" hidden>Pause animation</button>
     <div class="home-text">
@@ -238,7 +238,7 @@
       </div>
 
       <div class="panel" role="tabpanel" id="panel-learn" aria-labelledby="tab-learn" hidden>
-        <div class="col"><h4>What it does</h4><p>Every lesson is kept with the document it changed, so the next revision starts smarter. Doxie, your AI agent, reads your history, drafts the change summary, writes the redline and chases the approval. She never approves anything. You do.</p></div>
+        <div class="col"><h4>What it does</h4><p>Every lesson is kept with the document it changed, so the next revision starts smarter. The AI reads your history, drafts the change summary, writes the redline and chases the approval. It never approves anything. You do.</p></div>
       </div>
     </div>
   </section>
@@ -274,9 +274,8 @@
         <div class="card"><h3>Yours</h3><p>Your files, your storage, your approval.</p></div>
       </div>
       <h2 id="doxie-h">Meet Doxie.</h2>
-      <canvas class="mee" id="doxie-portrait" width="360" height="360" role="img" aria-label="Doxie, the Smart Docs Ai agent: a small wireframe girl with pink twin buns and a folder hair clip, waving, then answering with a found folder and a green tick"></canvas>
-      <p class="lede">Doxie is the Smart Docs Ai agent. She has read every document you let her open, every revision and every lesson, and she answers from the record, with the number and revision to prove it. She drafts, files and chases. She never approves. You do.</p>
-      <p class="note">Doxie is an AI, and she always says so.</p>
+      <canvas class="mee" id="doxie-portrait" width="360" height="360" role="img" aria-label="Doxie, the Smart Docs Ai visual agent: a small wireframe girl with pink twin buns, a folder hair clip and a green Smart Docs Ai lab coat with an AI agent badge, waving, then answering with a found folder and a green tick and a thumbs up"></canvas>
+      <p class="lede">Doxie is the face of Smart Docs Ai, our visual agent. Watch her and you see what the product does: every folder filed, every revision on record, every answer traced to its source. Approval stays with you.</p>
     </div>
   </section>
 
@@ -286,7 +285,7 @@
       <div class="faq-list">
         <details><summary>What is Smart Docs Ai?</summary><p>Document control with AI inside. Controlled documents, numbered revisions, approvals, an audit trail, a revision log and a PDF of every edit, with lessons learned kept beside the documents they changed.</p></details>
         <details><summary>Is it a document management system?</summary><p>No. Storage tools keep files. Smart Docs Ai keeps the record: which revision is in force, who approved it, what changed and why. You can keep using your storage underneath it.</p></details>
-        <details><summary>Who is Doxie?</summary><p>The Smart Docs Ai agent, and an AI. Ask her where a document is, what changed or who approved it, and she answers from the record with the document number and revision. She never approves a revision. A named person does.</p></details>
+        <details><summary>Who is Doxie?</summary><p>Our visual agent, the animated face of Smart Docs Ai. She shows what the product does: every folder filed, every revision kept on record. She is a drawing, not a person, and she approves nothing. A named person approves every revision.</p></details>
         <details><summary>Does the AI change my documents?</summary><p>It drafts, summarises and suggests, and every suggestion is labelled. A named person approves every revision. The AI never writes to a released revision.</p></details>
         <details><summary>Where are my files kept?</summary><p>Where you choose. Hosted by us, or on your own storage with the installable version. Either way they are yours, you can export everything at any time, and nothing you store trains a model for anyone else.</p></details>
         <details><summary>Does it meet ISO 9001?</summary><p>It is built around clause 7.5, documented information: creation, approval, revision, distribution and retention, with the records an auditor asks for. We will say plainly which standards it meets and which it does not yet.</p></details>
@@ -363,7 +362,7 @@
 
     // Home animation (2026-11-26, rev 2): wireframe. The scene opens already drawn: manila folders lie scattered all round a
     // filing cabinet. Its top drawer slides out comically far, the folders fly in and stand in order, the drawer shuts, and
-    // the camera pushes in as the cabinet becomes an AI server. Then Doxie pops out beside it: the Smart Docs Ai agent, wired
+    // the camera pushes in as the cabinet becomes an AI server. Then Doxie pops out beside it: the Smart Docs Ai visual agent, wired
     // to the server, who knows every document inside. Loops every 12.5 s; a pause control under the canvas; a finished frame under reduced motion.
     (function () {
       var cv = document.getElementById('docs-logo'); if (!cv || !cv.getContext) return;
@@ -410,30 +409,62 @@
         for (var i = -6; i <= 6; i++) line([i * 60, 0, -70], [i * 60, 0, 400], paper, alpha * .3, 1.5);
         for (var j = 0; j <= 8; j++) line([-360, 0, -70 + j * 60], [360, 0, -70 + j * 60], paper, alpha * .3, 1.5); }
 
-      // Doxie, the Smart Docs Ai Mee agent (vMia, virtual micro interactive agent): an original chibi character drawn in the same line style. Twin buns, a folder hair clip,
-      // a sailor collar with a bow, and an antenna curl that lights up because she is wired to the server. Local space: feet at 0,0.
+      // Doxie, the Smart Docs Ai visual agent (Mee agent / vMia, like Albert and the Noodle Chef): an original chibi character drawn in the same line style. Twin buns, a folder hair clip,
+      // the Mee agent lab coat in Smart Docs Ai green with her DOXIE · AI agent badge, and an antenna curl that lights up because she is wired to the server. Local space: feet at 0,0.
       function sk(col, a, w) { ctx.strokeStyle = rgba(col, a); ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke(); }
       function fl(col, a) { ctx.fillStyle = rgba(col, a); ctx.fill(); }
       function star(x, y, r, col, a) { ctx.beginPath(); ctx.moveTo(x, y - r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.quadraticCurveTo(x, y, x, y + r); ctx.quadraticCurveTo(x, y, x - r, y); ctx.quadraticCurveTo(x, y, x, y - r); fl(col, a); }
       function miniFolder(x, y, w, h, a, rot) { ctx.save(); ctx.translate(x, y); ctx.rotate(rot || 0); ctx.beginPath();
         ctx.moveTo(-w / 2, -h / 2); ctx.lineTo(-w / 2 + w * .38, -h / 2); ctx.lineTo(-w / 2 + w * .46, -h / 2 + h * .18); ctx.lineTo(w / 2, -h / 2 + h * .18); ctx.lineTo(w / 2, h / 2); ctx.lineTo(-w / 2, h / 2); ctx.closePath();
         fl(manila, a * .25); sk(manila, a, 2.2); ctx.restore(); }
+      var COAT = '16,52,38'; // Smart Docs Ai coat green (Mee agent template)
+      function sdMark(x, y, s, a) { ctx.save(); ctx.translate(x, y); // the sheets-and-stamp mark, embroidered
+        ctx.beginPath(); ctx.rect(-s * .9, -s * .7, s * 1.2, s * 1.5); sk(paper, a * .6, 1.2);
+        ctx.beginPath(); ctx.rect(-s * .6, -s, s * 1.2, s * 1.5); fl(paper, a * .15); sk(paper, a, 1.4);
+        ctx.beginPath(); ctx.arc(s * .45, s * .45, s * .42, 0, 6.283); sk('60,180,120', a, 1.6); ctx.restore(); }
+      var POSES = { down: [14, 6], folder: [22, 70], wave: [96, 142], thumb: [30, 112] }; // [upper arm, forearm], degrees from straight down, outward
+      function dirn(deg, s) { var r = deg * Math.PI / 180; return [s * Math.sin(r), Math.cos(r)]; }
+      function arm(s, pose, a, t) {
+        var p = POSES[pose] || POSES.down, fo = p[1] + (pose === 'wave' ? 22 * Math.sin(t * 9) : 0);
+        var sh = [17 * s, -74], d1 = dirn(p[0], s), d2 = dirn(fo, s), el = [sh[0] + d1[0] * 16, sh[1] + d1[1] * 16], wr = [el[0] + d2[0] * 14, el[1] + d2[1] * 14];
+        ctx.beginPath(); ctx.moveTo(sh[0], sh[1]); ctx.lineTo(el[0], el[1]); ctx.lineTo(wr[0], wr[1]); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        ctx.strokeStyle = rgba(paper, a); ctx.lineWidth = 16; ctx.stroke(); ctx.strokeStyle = rgba(COAT, a); ctx.lineWidth = 10.4; ctx.stroke();
+        var n2 = [-d2[1], d2[0]], cf = [wr[0] - d2[0] * 3.2, wr[1] - d2[1] * 3.2];
+        ctx.beginPath(); ctx.moveTo(cf[0] + n2[0] * 5, cf[1] + n2[1] * 5); ctx.lineTo(cf[0] - n2[0] * 5, cf[1] - n2[1] * 5); sk(manila, a, 2.6);
+        if (s < 0) { var pm = [sh[0] + d1[0] * 7, sh[1] + d1[1] * 7]; ctx.beginPath(); ctx.arc(pm[0], pm[1], 4.2, 0, 6.283); fl(ink, a); sk(manila, a, 1.3); sdMark(pm[0], pm[1], 2, a); } // sleeve patch
+        var hx = wr[0] + d2[0] * 4, hy = wr[1] + d2[1] * 4, ang = Math.atan2(d2[1], d2[0]);
+        if (pose === 'folder') miniFolder(hx - 6, hy + 4, 22, 16, a, -.25);
+        ctx.beginPath(); ctx.arc(hx, hy, 5.2, 0, 6.283); fl(ink, a); sk(paper, a, 2.4);
+        if (pose === 'wave') { ctx.beginPath(); for (var i = -1.5; i <= 1.5; i++) { var g = ang + i * .32; ctx.moveTo(hx + Math.cos(g) * 5, hy + Math.sin(g) * 5); ctx.lineTo(hx + Math.cos(g) * 9.4, hy + Math.sin(g) * 9.4); } sk(paper, a, 2.2);
+          var m = .5 + .5 * Math.sin(t * 9); for (var q = 0; q < 2; q++) { ctx.beginPath(); ctx.arc(hx, hy, 13 + q * 4, ang - .55, ang + .55); sk(paper, a * .45 * (q ? m : 1 - m), 1.4); } }
+        if (pose === 'thumb') { ctx.beginPath(); ctx.moveTo(hx - 1.5 * s, hy - 4); ctx.lineTo(hx - 1.5 * s, hy - 12); sk(paper, a, 3.2); }
+      }
       function doxie(t, a, out) { // t = seconds since she appeared; out = when her speech bubble folds away (optional)
-        var blink = (t % 3.4) > 3.24 || (t > .2 && t < .34), wave = t > .5 && t < 2.6 ? Math.sin((t - .5) * 9) : 0;
+        var blink = (t % 3.4) > 3.24 || (t > .2 && t < .34);
         // shadow, legs, shoes
-        ctx.beginPath(); ctx.ellipse(0, 2, 28, 6, 0, 0, 6.283); sk(paper, a * .25, 2);
-        ctx.beginPath(); ctx.moveTo(-9, -30); ctx.lineTo(-9, -8); ctx.moveTo(9, -30); ctx.lineTo(9, -8); sk(paper, a, 3);
+        ctx.beginPath(); ctx.ellipse(0, 2, 30, 6, 0, 0, 6.283); sk(paper, a * .25, 2);
+        ctx.beginPath(); ctx.moveTo(-9, -24); ctx.lineTo(-9, -8); ctx.moveTo(9, -24); ctx.lineTo(9, -8); sk(paper, a, 3);
         ctx.beginPath(); ctx.ellipse(-11, -5, 8, 4.5, 0, 0, 6.283); ctx.moveTo(19, -5); ctx.ellipse(11, -5, 8, 4.5, 0, 0, 6.283); sk(pink, a, 2.5);
-        // dress with pleats, sailor collar, bow
-        ctx.beginPath(); ctx.moveTo(-13, -78); ctx.lineTo(-33, -30); ctx.lineTo(33, -30); ctx.lineTo(13, -78); ctx.closePath(); fl(paper, a * .06); sk(paper, a, 3);
-        ctx.beginPath(); [-17, -6, 6, 17].forEach(function (x) { ctx.moveTo(x, -43); ctx.lineTo(x * 1.08, -31); }); sk(paper, a * .5, 1.5);
-        ctx.beginPath(); ctx.moveTo(-17, -76); ctx.lineTo(0, -58); ctx.lineTo(17, -76); sk(blue, a, 2.5);
-        ctx.beginPath(); ctx.moveTo(0, -66); ctx.lineTo(-11, -72); ctx.lineTo(-11, -60); ctx.closePath(); ctx.moveTo(0, -66); ctx.lineTo(11, -72); ctx.lineTo(11, -60); ctx.closePath(); fl(pink, a * .85);
-        // arms: one hugs a little folder, the other waves
-        ctx.beginPath(); ctx.moveTo(-13, -72); ctx.lineTo(-24, -52); sk(paper, a, 3);
-        miniFolder(-30, -46, 22, 16, a, -.25);
-        var ang = 1.05 + .45 * wave, hx = 13 + 27 * Math.cos(ang), hy = -72 - 27 * Math.sin(ang);
-        ctx.beginPath(); ctx.moveTo(13, -72); ctx.lineTo(hx, hy); sk(paper, a, 3); ctx.beginPath(); ctx.arc(hx, hy, 4, 0, 6.283); sk(paper, a, 2.5);
+        // the Mee agent lab coat in Smart Docs Ai colours (Logan 2026-11-26 09:46, template in the shared Mee agent spec 2b):
+        // deep green coat, manila lapels, piping and cuffs, a pink tie, the sheets-and-stamp mark on the chest, and her ID badge
+        ctx.beginPath(); ctx.moveTo(-17, -79); ctx.quadraticCurveTo(-24, -58, -37, -21); ctx.quadraticCurveTo(0, -15, 37, -21); ctx.quadraticCurveTo(24, -58, 17, -79); ctx.closePath(); fl(COAT, a); sk(paper, a, 3);
+        ctx.beginPath(); ctx.moveTo(-8, -79); ctx.lineTo(0, -55); ctx.lineTo(8, -79); ctx.closePath(); fl(ink, a);
+        ctx.beginPath(); ctx.moveTo(-6, -78); ctx.lineTo(0, -71); ctx.lineTo(6, -78); sk(paper, a * .8, 2);
+        ctx.beginPath(); ctx.moveTo(0, -71); ctx.lineTo(-2.6, -66); ctx.lineTo(0, -57); ctx.lineTo(2.6, -66); ctx.closePath(); fl(pink, a * .9);
+        [-1, 1].forEach(function (s) { ctx.beginPath(); ctx.moveTo(9 * s, -80); ctx.lineTo(18 * s, -76); ctx.lineTo(15 * s, -69); ctx.lineTo(19 * s, -67); ctx.lineTo(2 * s, -49); sk(manila, a, 2.4); });
+        ctx.beginPath(); ctx.moveTo(2, -49); ctx.lineTo(3, -19); sk(paper, a * .8, 2);
+        [-42, -33, -25].forEach(function (y) { ctx.beginPath(); ctx.arc(7, y, 1.9, 0, 6.283); fl(paper, a * .25); sk(paper, a * .9, 1.3); });
+        sdMark(16.5, -61, 3.4, a);
+        ctx.beginPath(); ctx.moveTo(10, -55); ctx.lineTo(23, -55); ctx.lineTo(24, -45); ctx.lineTo(11, -45); ctx.closePath(); sk(paper, a * .7, 1.6);
+        ctx.beginPath(); ctx.moveTo(10, -55); ctx.lineTo(23, -55); sk(manila, a, 2);
+        ctx.beginPath(); ctx.moveTo(14, -55); ctx.lineTo(13.5, -61); sk(green, a, 2.2); ctx.beginPath(); ctx.moveTo(18, -55); ctx.lineTo(18.6, -59.5); sk(paper, a, 2.2);
+        [-1, 1].forEach(function (s) { ctx.beginPath(); ctx.moveTo(14 * s, -35); ctx.lineTo(29 * s, -36); sk(manila, a * .9, 2);
+          ctx.beginPath(); ctx.moveTo(14.5 * s, -35); ctx.lineTo(15 * s, -27); ctx.moveTo(29 * s, -36); ctx.lineTo(31 * s, -28); sk(paper, a * .5, 1.4); });
+        ctx.save(); ctx.translate(17, -43); ctx.rotate(.04); // ID badge clipped to the breast pocket: DOXIE · AI agent
+        ctx.beginPath(); ctx.moveTo(0, -9); ctx.lineTo(0, -5); sk(paper, a * .8, 1.4);
+        ctx.beginPath(); ctx.rect(-11, -5, 22, 12); fl(ink, a); sk(manila, a, 1.5); ctx.beginPath(); ctx.rect(-9, -3, 4.5, 7); fl(pink, a * .35);
+        ctx.fillStyle = rgba(paper, a); ctx.font = '700 3.2px -apple-system, "Segoe UI", Helvetica, Arial, sans-serif'; ctx.textAlign = 'left'; ctx.fillText('DOXIE', -3.2, .6);
+        ctx.font = '500 2.8px -apple-system, "Segoe UI", Helvetica, Arial, sans-serif'; ctx.fillStyle = rgba(manila, a); ctx.fillText('AI agent', -3.2, 4.6); ctx.restore();
         // head
         ctx.beginPath(); ctx.arc(0, -122, 44, 0, 6.283); fl(ink, a * .9); sk(paper, a, 3);
         // hair: crown, side locks, zig-zag fringe, twin buns with swirls
@@ -457,6 +488,8 @@
           ctx.beginPath(); ctx.ellipse(29 * s, -88, 7, 4, 0, 0, 6.283); fl(pink, a * .45);
           ctx.beginPath(); for (var k = -1; k <= 1; k++) { ctx.moveTo(29 * s + k * 4 - 2, -86); ctx.lineTo(29 * s + k * 4 + 2, -91); } sk(pink, a * .9, 1.5); });
         ctx.beginPath(); ctx.arc(-3, -89, 3, 0, Math.PI); ctx.moveTo(6, -89); ctx.arc(3, -89, 3, 0, Math.PI); sk(paper, a, 2);
+        // arms: coat sleeves with manila cuffs and hands; the left holds her folder, the right waves hello, then a thumbs up when she has the answer
+        arm(-1, 'folder', a, t); arm(1, t > .5 && t < 2.6 ? 'wave' : (t >= 2.3 ? 'thumb' : 'down'), a, t);
         // sparkles
         [[-62, -150, 0], [60, -64, 1.3], [-58, -36, 2.1], [66, -170, 3]].forEach(function (p, i) { var tw = Math.max(0, Math.sin(t * 2.6 + p[2])); star(p[0], p[1], 4 + 4 * tw, i % 2 ? green : blue, a * tw); });
         // speech bubble: a found folder and a tick, after a short "thinking" pause
