@@ -1,0 +1,38 @@
+name: Mee agent copy check
+
+# Doxie is drawn by mee/doxie.js, a copy published from Jarvis (Jarvis Mee Agents is the control copy).
+# This check fails if the code in mee/doxie.js no longer matches the SHA-256 that mee/SOURCE.json names,
+# so the copy cannot be edited on this site. Change Doxie in Jarvis and republish with tools/mee_publish.py.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check mee/ against SOURCE.json
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, pathlib, sys
+          MARK = "// ---- end of the Jarvis publishing header ----\n"
+          recs = json.loads(pathlib.Path("mee/SOURCE.json").read_text(encoding="utf-8"))
+          bad = []
+          for name, rec in recs.items():
+              text = pathlib.Path(rec["path"]).read_text(encoding="utf-8")
+              i = text.find(MARK)
+              body = text[i + len(MARK):] if i >= 0 else ""
+              got = hashlib.sha256(body.encode("utf-8")).hexdigest()
+              if i < 0 or got != rec["sha256"]:
+                  bad.append(f"{name}: {rec['path']} is not the copy Jarvis published (sha256 {got}, SOURCE.json says {rec['sha256']})")
+              elif rec["sha256"] not in text[:i]:
+                  bad.append(f"{name}: the publishing header of {rec['path']} does not name its SHA-256")
+          print("\n".join(bad) if bad else "Mee agent copies match Jarvis: " + ", ".join(sorted(recs)))
+          sys.exit(1 if bad else 0)
+          PY

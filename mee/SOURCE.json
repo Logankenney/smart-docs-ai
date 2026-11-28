@@ -1,0 +1,12 @@
+{
+  "Doxie": {
+    "agent": "Doxie",
+    "bytes": 42382,
+    "control": "Jarvis Mee Agents",
+    "global": "MeeDoxie",
+    "mee_rev": 7,
+    "path": "mee/doxie.js",
+    "sha256": "8896da49f66e19849d94a56e60dc4cfda3e503e90ad4cfa23cabcd0d4a1d5e4d",
+    "source": "docs/Mee Agents/Doxie/doxie.js"
+  }
+}
